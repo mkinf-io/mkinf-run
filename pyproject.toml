@@ -7,9 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.13"
-ddg_search = { path = "./langchain/ddg_search", develop = true }
 fastapi = "^0.115.5"
 uvicorn = "^0.32.1"
+requests = "2.32.3"
+ddg_search = { path = "./repo_langchain/ddg_search", develop = true }
+bing_search = { path = "./repo_langchain/bing_search", develop = true }
 
 [build-system]
 requires = ["poetry-core"]
