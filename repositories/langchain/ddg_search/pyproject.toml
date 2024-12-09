@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "ddg_search"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+duckduckgo-search = "6.3.7"
+langchain_core = "0.3.21"
+pydantic = "2.10.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

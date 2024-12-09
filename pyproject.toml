@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "hub"
+version = "0.1.0"
+description = ""
+authors = ["mkinf <info@mkinf.io>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = "^0.115.5"
+uvicorn = "^0.32.1"
+requests = "2.32.3"
+ddg_search = { path = "./repositories/langchain/ddg_search", develop = true }
+bing_search = { path = "./repositories/langchain/bing_search", develop = true }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
