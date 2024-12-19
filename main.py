@@ -20,7 +20,7 @@ def get_root():
     return {"message": "👾 Hello from mkinf hub!"}
 
 
-@app.post("/v0.2/{owner}/{repo}")
+@app.post("/v0.1/{owner}/{repo}")
 def run_default_action(owner: str, repo: str, body: str | dict[str, Any], user: UserResponse = Depends(check_auth)):
     # TODO: count runs per agent
     try:
@@ -35,7 +35,7 @@ def run_default_action(owner: str, repo: str, body: str | dict[str, Any], user: 
         raise HTTPException(status_code=500, detail="Server error")
 
 
-@app.post("/v0.2/{owner}/{repo}/{action}")
+@app.post("/v0.1/{owner}/{repo}/{action}")
 def run_action(owner: str, repo: str, action: str, body: str | dict[str, Any],
                user: UserResponse = Depends(check_auth)):
     # TODO: count runs per agent
