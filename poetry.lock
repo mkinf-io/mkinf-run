@@ -134,6 +134,25 @@ files = [
 ]
 
 [[package]]
+name = "anonymize-pii"
+version = "1.0.0"
+description = "Glaider allows you to anonymize personally identifiable information (PII) in text data before processing it with AI models or storing it. The service automatically detects and anonymizes sensitive information such as personal names, locations, organizations, email addresses, IP addresses, access tokens, API keys, credit card numbers, and more."
+optional = false
+python-versions = "^3.12"
+files = []
+develop = true
+
+[package.dependencies]
+langchain = "0.3.9"
+langchain_core = "0.3.21"
+pydantic = "2.10.3"
+requests = "2.32.3"
+
+[package.source]
+type = "directory"
+url = "repositories/glaider/anonymize_pii"
+
+[[package]]
 name = "anyio"
 version = "4.7.0"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
@@ -1918,4 +1937,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "ba8183a80d3fc8ace171817430c84115909b11abc406dbb03ebae7e2cc9517ad"
+content-hash = "4949fdcc36732bdc3e3f14bed643ef62b1d453fddffc1764dfd6fc584faa06a4"
