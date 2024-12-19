@@ -13,7 +13,7 @@ class AnonymizePIIRun(BaseTool):  # type: ignore[override]
     description: str = (
         "A wrapper around glaider anonymization API. "
         "Useful for when you need to anonymize personally identifiable information (PII) in text data before processing it with AI models or storing it. "
-        "The service automatically detects and anonymizes sensitive information such as personal names, locations, organizations, email addresses, IP addresses, access tokens, API keys, credit card numbers, and more."
+        "The service automatically detects and anonymizes sensitive information such as personal names, locations, organizations, email addresses, IP addresses, access tokens, API keys, credit card numbers, and more. "
         "Input should be a prompt. Output is a JSON object containing the anonymized prompt (anonymized_text) and the key value anonymized entities (entities)."
     )
     api_wrapper: AnonymizePIIAPIWrapper = Field(default_factory=AnonymizePIIAPIWrapper)
