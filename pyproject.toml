@@ -7,9 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = "^0.115.5"
-uvicorn = "^0.32.1"
+fastapi = "0.115.6"
+uvicorn = "0.34.0"
 requests = "2.32.3"
+supabase = "2.10.0"
+gotrue = "2.11.0"
 ddg_search = { path = "./repositories/langchain/ddg_search", develop = true }
 bing_search = { path = "./repositories/langchain/bing_search", develop = true }
 

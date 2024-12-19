@@ -1,31 +1,33 @@
-from pydantic import BaseModel
+from typing import Any
 
-from ddg_search import DuckDuckGoSearchRun
-from bing_search import BingSearchRun
-
-from fastapi import FastAPI, Query, HTTPException
 import uvicorn
+from fastapi import FastAPI, HTTPException
+from fastapi.params import Depends
+from gotrue import UserResponse
 from requests import HTTPError
 
+from bing_search import BingSearchRun
+from ddg_search import DuckDuckGoSearchRun
+from utils.auth import check_auth
+from utils.db_client import create_db_client
+
 app = FastAPI()
+create_db_client()
 
 
 @app.get("/")
-def read_root():
+def get_root():
     return {"message": "👾 Hello from mkinf hub!"}
 
 
-class Body(BaseModel):
-    query: str
-
-
-@app.post("/v0.1/{owner}/{repo}")
-def run_default_action(owner: str, repo: str, body: Body = None):
+@app.post("/v0.2/{owner}/{repo}")
+def run_default_action(owner: str, repo: str, body: str | dict[str, Any], user: UserResponse = Depends(check_auth)):
+    # TODO: count runs per agent
     try:
         if owner == "langchain" and repo == "ddg_search":
-            return DuckDuckGoSearchRun().run(body.query)
+            return DuckDuckGoSearchRun().run(body)
         elif owner == "langchain" and repo == "bing_search":
-            return BingSearchRun().run(body.query)
+            return BingSearchRun().run(body)
         raise HTTPException(status_code=404, detail="Repository not found")
     except HTTPError as e:
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
@@ -33,23 +35,25 @@ def run_default_action(owner: str, repo: str, body: Body = None):
         raise HTTPException(status_code=500, detail="Server error")
 
 
-@app.post("/v0.1/{owner}/{repo}/{action}")
-def run_action(owner: str, repo: str, action: str, body: Body = None):
+@app.post("/v0.2/{owner}/{repo}/{action}")
+def run_action(owner: str, repo: str, action: str, body: str | dict[str, Any],
+               user: UserResponse = Depends(check_auth)):
+    # TODO: count runs per agent
     try:
         if owner == "langchain" and repo == "ddg_search" and action == "run":
-            return DuckDuckGoSearchRun().run(body.query)
+            return DuckDuckGoSearchRun().run(body)
         elif owner == "langchain" and repo == "bing_search" and action == "run":
-            return BingSearchRun().run(body.query)
+            return BingSearchRun().run(body)
         raise HTTPException(status_code=404, detail="Repository not found")
     except HTTPError as e:
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
-    except Exception:
+    except Exception as e:
         raise HTTPException(status_code=500, detail="Server error")
 
 
 # Additional route
 @app.get("/about")
-def about():
+def get_about():
     return {"message": "👾 mkinf hub"}
 
 
