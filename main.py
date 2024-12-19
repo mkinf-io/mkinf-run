@@ -6,6 +6,7 @@ from fastapi.params import Depends
 from gotrue import UserResponse
 from requests import HTTPError
 
+from anonymize_pii import AnonymizePIIRun
 from bing_search import BingSearchRun
 from ddg_search import DuckDuckGoSearchRun
 from utils.auth import check_auth
@@ -28,6 +29,8 @@ def run_default_action(owner: str, repo: str, body: str | dict[str, Any], user: 
             return DuckDuckGoSearchRun().run(body)
         elif owner == "langchain" and repo == "bing_search":
             return BingSearchRun().run(body)
+        elif owner == "glaider" and repo == "anonymize_pii":
+            return AnonymizePIIRun().run(body)
         raise HTTPException(status_code=404, detail="Repository not found")
     except HTTPError as e:
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
@@ -44,6 +47,8 @@ def run_action(owner: str, repo: str, action: str, body: str | dict[str, Any],
             return DuckDuckGoSearchRun().run(body)
         elif owner == "langchain" and repo == "bing_search" and action == "run":
             return BingSearchRun().run(body)
+        elif owner == "glaider" and repo == "anonymize_pii" and action == "run":
+            return AnonymizePIIRun().run(body)
         raise HTTPException(status_code=404, detail="Repository not found")
     except HTTPError as e:
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text)

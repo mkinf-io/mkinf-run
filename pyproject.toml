@@ -14,6 +14,7 @@ supabase = "2.10.0"
 gotrue = "2.11.0"
 ddg_search = { path = "./repositories/langchain/ddg_search", develop = true }
 bing_search = { path = "./repositories/langchain/bing_search", develop = true }
+anonymize_pii = { path = "./repositories/glaider/anonymize_pii", develop = true }
 
 [build-system]
 requires = ["poetry-core"]
