@@ -20,11 +20,11 @@ class AnonymizePIIRun(BaseTool):  # type: ignore[override]
 
     def _run(
         self,
-        query: str,
+        prompt: str,
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> dict:
         """Use the tool."""
         langchain.verbose = False
         langchain.debug = False
         langchain.llm_cache = False
-        return self.api_wrapper.run(query)
+        return self.api_wrapper.run(prompt)
