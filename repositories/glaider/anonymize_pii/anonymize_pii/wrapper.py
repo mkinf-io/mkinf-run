@@ -27,7 +27,7 @@ class AnonymizePIIAPIWrapper(BaseModel):
             **self.search_kwargs,
         }
         response = requests.post(
-            self.bing_search_url,
+            self.glaider_anonymize_pii_url,
             headers=headers,
             json=body
         )
@@ -57,6 +57,4 @@ class AnonymizePIIAPIWrapper(BaseModel):
 
     def run(self, prompt: str) -> dict:
         """Run query through BingSearch and parse result."""
-        snippets = []
-        result = self._glaider_anonymize_pii_result(prompt)
-        return result
+        return self._glaider_anonymize_pii_result(prompt)

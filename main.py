@@ -1,3 +1,4 @@
+import traceback
 from typing import Any
 
 import uvicorn
@@ -34,7 +35,9 @@ def run_default_action(owner: str, repo: str, body: str | dict[str, Any], user: 
         raise HTTPException(status_code=404, detail="Repository not found")
     except HTTPError as e:
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
-    except Exception:
+    except Exception as e:
+        traceback.print_exc()
+        print(e)
         raise HTTPException(status_code=500, detail="Server error")
 
 
@@ -53,6 +56,8 @@ def run_action(owner: str, repo: str, action: str, body: str | dict[str, Any],
     except HTTPError as e:
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
     except Exception as e:
+        traceback.print_exc()
+        print(e)
         raise HTTPException(status_code=500, detail="Server error")
 
 
