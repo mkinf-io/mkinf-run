@@ -12,9 +12,10 @@ uvicorn = "0.34.0"
 requests = "2.32.3"
 supabase = "2.10.0"
 gotrue = "2.11.0"
-ddg_search = { path = "./repositories/langchain/ddg_search", develop = true }
-bing_search = { path = "./repositories/langchain/bing_search", develop = true }
-anonymize_pii = { path = "./repositories/glaider/anonymize_pii", develop = true }
+ddg_search = { path = "./repositories/langchain/ddg_search" }
+bing_search = { path = "./repositories/langchain/bing_search" }
+anonymize_pii = { path = "./repositories/glaider/anonymize_pii" }
+gitingest_tool = { path = "./repositories/cyclotruc/gitingest" }
 
 [build-system]
 requires = ["poetry-core"]
