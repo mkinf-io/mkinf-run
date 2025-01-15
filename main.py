@@ -4,15 +4,13 @@ from typing import Any
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.params import Depends
-from gotrue import UserResponse
 from requests import HTTPError
 
-from anonymize_pii import AnonymizePIIRun
-from bing_search import BingSearchRun
-from ddg_search import DuckDuckGoSearchRun
-from gitingest_tool import GitIngestRun
 from utils.auth import check_auth
-from utils.db_client import create_db_client
+from utils.count_tokens import count_tokens
+from utils.db_client import create_db_client, DBClient, get_db
+from utils.repositories import repositories
+from utils.runs import count_run
 
 app = FastAPI()
 create_db_client()
@@ -23,19 +21,21 @@ def get_root():
     return {"message": "👾 Hello from mkinf hub!"}
 
 
-@app.post("/v0.1/{owner}/{repo}")
-def run_default_action(owner: str, repo: str, body: str | dict[str, Any], user: UserResponse = Depends(check_auth)):
+@app.post("/v0.1/{owner}/{repo_version}")
+def run_default_action(owner: str, repo_version: str, body: str | dict[str, Any], key_id: str = Depends(check_auth),
+                       db: DBClient | None = Depends(get_db)):
+    parts = repo_version.split(":", 1)
+    repo = parts[0]
+    version = parts[1] if len(parts) > 1 else None
+    # TODO: check for credit card
     # TODO: count runs per agent
     try:
-        if owner == "langchain" and repo == "ddg_search":
-            return DuckDuckGoSearchRun().run(body)
-        elif owner == "langchain" and repo == "bing_search":
-            return BingSearchRun().run(body)
-        elif owner == "glaider" and repo == "anonymize_pii":
-            return AnonymizePIIRun().run(body)
-        elif owner == "cyclotruc" and repo == "gitingest":
-            return GitIngestRun().run(body)
-        raise HTTPException(status_code=404, detail="Repository not found")
+        input_tokens = count_tokens(str(body))
+        result = repositories[owner][repo][0](body)
+        output_tokens = count_tokens(result)
+        count_run(db=db, key_id=key_id, owner=owner, repo=repo, action=None, version=version,
+                  input_tokens=input_tokens, output_tokens=output_tokens)
+        return result
     except HTTPError as e:
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
     except Exception as e:
@@ -44,20 +44,21 @@ def run_default_action(owner: str, repo: str, body: str | dict[str, Any], user: 
         raise HTTPException(status_code=500, detail="Server error")
 
 
-@app.post("/v0.1/{owner}/{repo}/{action}")
-def run_action(owner: str, repo: str, action: str, body: str | dict[str, Any],
-               user: UserResponse = Depends(check_auth)):
-    # TODO: count runs per agent
+@app.post("/v0.1/{owner}/{repo_version}/{action}")
+def run_action(owner: str, repo_version: str, action: str, body: str | dict[str, Any],
+               key_id: str = Depends(check_auth),
+               db: DBClient | None = Depends(get_db)):
+    parts = repo_version.split(":", 1)
+    repo = parts[0]
+    version = parts[1] if len(parts) > 1 else None
+    # TODO: check for credit card
     try:
-        if owner == "langchain" and repo == "ddg_search" and action == "run":
-            return DuckDuckGoSearchRun().run(body)
-        elif owner == "langchain" and repo == "bing_search" and action == "run":
-            return BingSearchRun().run(body)
-        elif owner == "glaider" and repo == "anonymize_pii" and action == "run":
-            return AnonymizePIIRun().run(body)
-        elif owner == "cyclotruc" and repo == "gitingest" and action == "run":
-            return GitIngestRun().run(body)
-        raise HTTPException(status_code=404, detail="Repository not found")
+        input_tokens = count_tokens(str(body))
+        result = repositories[owner][repo][action](body)
+        output_tokens = count_tokens(result)
+        count_run(db=db, key_id=key_id, owner=owner, repo=repo, action=action, version=version,
+                  input_tokens=input_tokens, output_tokens=output_tokens)
+        return result
     except HTTPError as e:
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
     except Exception as e:
