@@ -2,6 +2,7 @@ from anonymize_pii import AnonymizePIIRun
 from bing_search import BingSearchRun
 from ddg_search import DuckDuckGoSearchRun
 from gitingest_tool import GitIngestRun
+from scrapegraphai_tool import ScrapeGraphAiRun
 
 repositories = {
     "langchain": {
@@ -20,6 +21,11 @@ repositories = {
     "cyclotruc": {
         "gitingest": {
             "run": GitIngestRun().run
+        }
+    },
+    "ScrapeGraphAI":{
+        "scrapegraphai": {
+            "run": ScrapeGraphAiRun().run
         }
     }
 }

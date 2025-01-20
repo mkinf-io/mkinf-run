@@ -33,6 +33,8 @@ def run_default_action(owner: str, repo_version: str, body: str | dict[str, Any]
         count_run(db=db, key_id=key_id, owner=owner, repo=repo, action=None, version=version,
                   input_tokens=input_tokens, output_tokens=output_tokens)
         return result
+    except HTTPException as e:
+        raise e
     except HTTPError as e:
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
     except Exception as e:
@@ -54,6 +56,8 @@ def run_action(owner: str, repo_version: str, action: str, body: str | dict[str,
         count_run(db=db, key_id=key_id, owner=owner, repo=repo, action=action, version=version,
                   input_tokens=input_tokens, output_tokens=output_tokens)
         return result
+    except HTTPException as e:
+        raise e
     except HTTPError as e:
         raise HTTPException(status_code=e.response.status_code, detail=e.response.text)
     except Exception as e:
