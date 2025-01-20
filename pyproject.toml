@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "hub"
+name = "mkinf-run"
 version = "0.1.0"
 description = ""
 authors = ["mkinf <info@mkinf.io>"]
