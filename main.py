@@ -24,14 +24,11 @@ def get_root():
 @app.post("/v0.1/{owner}/{repo_version}")
 def run_default_action(owner: str, repo_version: str, body: str | dict[str, Any], key_id: str = Depends(check_auth),
                        db: DBClient | None = Depends(get_db)):
-    parts = repo_version.split(":", 1)
-    repo = parts[0]
-    version = parts[1] if len(parts) > 1 else None
+    repo, version = repo_version.split(":", 1) if ":" in repo_version else (repo_version, None)
     # TODO: check for credit card
-    # TODO: count runs per agent
     try:
         input_tokens = count_tokens(str(body))
-        result = repositories[owner][repo][0](body)
+        result = repositories[owner][repo]['run'](body)
         output_tokens = count_tokens(result)
         count_run(db=db, key_id=key_id, owner=owner, repo=repo, action=None, version=version,
                   input_tokens=input_tokens, output_tokens=output_tokens)
@@ -48,14 +45,12 @@ def run_default_action(owner: str, repo_version: str, body: str | dict[str, Any]
 def run_action(owner: str, repo_version: str, action: str, body: str | dict[str, Any],
                key_id: str = Depends(check_auth),
                db: DBClient | None = Depends(get_db)):
-    parts = repo_version.split(":", 1)
-    repo = parts[0]
-    version = parts[1] if len(parts) > 1 else None
+    repo, version = repo_version.split(":", 1) if ":" in repo_version else (repo_version, None)
     # TODO: check for credit card
     try:
         input_tokens = count_tokens(str(body))
         result = repositories[owner][repo][action](body)
-        output_tokens = count_tokens(result)
+        output_tokens = count_tokens(str(result))
         count_run(db=db, key_id=key_id, owner=owner, repo=repo, action=action, version=version,
                   input_tokens=input_tokens, output_tokens=output_tokens)
         return result
@@ -74,4 +69,4 @@ def get_about():
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="localhost", port=3000, reload=True)
+    uvicorn.run("main:app", host="localhost", port=3333, reload=True)
