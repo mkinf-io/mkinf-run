@@ -18,6 +18,7 @@ ddg_search = { path = "./repositories/langchain/ddg_search" }
 bing_search = { path = "./repositories/langchain/bing_search" }
 anonymize_pii = { path = "./repositories/glaider/anonymize_pii" }
 gitingest_tool = { path = "./repositories/cyclotruc/gitingest" }
+scrapegraphai_tool = { path = "./repositories/ScrapeGraphAI/scrapegraphai" }
 
 [build-system]
 requires = ["poetry-core"]
