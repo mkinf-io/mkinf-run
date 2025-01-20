@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "scrapegraphai_tool"
-version = "0.36.0"
+version = "1.36.0"
 description = "Python scraper based on AI"
 authors = ["ScrapeGraphAI"]
 readme = "README.md"

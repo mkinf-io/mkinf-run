@@ -2797,7 +2797,7 @@ ocr = ["ipywidgets (>=8.1.0)", "matplotlib (>=3.7.2)", "pillow (>=10.4.0)", "sur
 
 [[package]]
 name = "scrapegraphai-tool"
-version = "0.36.0"
+version = "1.36.0"
 description = "Python scraper based on AI"
 optional = false
 python-versions = "^3.12"
