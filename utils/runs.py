@@ -1,12 +1,8 @@
-from posix import error
 import traceback
-
-from fastapi import HTTPException
-
 from utils.db_client import DBClient
 
 
-def count_run(db: DBClient, key_id: str, owner: str, repo: str, version: str, action: str | None,
+def count_run(db: DBClient, key_id: str, owner: str, repo: str, version: str | None, action: str | None,
               input_tokens: int, output_tokens: int | None) -> str | None:
     try:
         # TODO: Get price
