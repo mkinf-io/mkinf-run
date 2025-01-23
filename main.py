@@ -26,7 +26,6 @@ def get_root():
 @app.post("/v0.1/{owner}/{repo_version}")
 def run_default_action(owner: str, repo_version: str, body: str | dict[str, Any],
                        key_id=Annotated[str, Depends(check_auth)], db=Annotated[Optional[DBClient], Depends(get_db)]):
-    if type(key_id) is not str or type(db) is not DBClient: raise Exception("Server error")
     repo, version = repo_version.split(":", 1) if ":" in repo_version else (repo_version, None)
     # TODO: check for credit card
     try:
@@ -49,7 +48,6 @@ def run_default_action(owner: str, repo_version: str, body: str | dict[str, Any]
 @app.post("/v0.1/{owner}/{repo_version}/{action}")
 def run_action(owner: str, repo_version: str, action: str, body: str | dict[str, Any],
                key_id=Annotated[str, Depends(check_auth)], db=Annotated[Optional[DBClient], Depends(get_db)]):
-    if type(key_id) is not str or type(db) is not DBClient: raise Exception("Server error")
     repo, version = repo_version.split(":", 1) if ":" in repo_version else (repo_version, None)
     # TODO: check for credit card
     try:
