@@ -25,7 +25,7 @@ def get_root():
 
 @app.post("/v0.1/{owner}/{repo_version}")
 def run_default_action(owner: str, repo_version: str, body: str | dict[str, Any],
-                       key_id=Annotated[str, Depends(check_auth)], db=Annotated[Optional[DBClient], Depends(get_db)]):
+                       key_id: str = Depends(check_auth), db: Optional[DBClient] = Depends(get_db)):
     repo, version = repo_version.split(":", 1) if ":" in repo_version else (repo_version, None)
     # TODO: check for credit card
     # TODO: Check if can run privates repo (is_private)
@@ -48,7 +48,7 @@ def run_default_action(owner: str, repo_version: str, body: str | dict[str, Any]
 
 @app.post("/v0.1/{owner}/{repo_version}/{action}")
 def run_action(owner: str, repo_version: str, action: str, body: str | dict[str, Any],
-               key_id=Annotated[str, Depends(check_auth)], db=Annotated[Optional[DBClient], Depends(get_db)]):
+               key_id: str = Depends(check_auth), db: Optional[DBClient] = Depends(get_db)):
     repo, version = repo_version.split(":", 1) if ":" in repo_version else (repo_version, None)
     # TODO: check for credit card
     # TODO: Check if can run privates repo (is_private)
