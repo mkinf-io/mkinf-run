@@ -28,6 +28,7 @@ def run_default_action(owner: str, repo_version: str, body: str | dict[str, Any]
                        key_id=Annotated[str, Depends(check_auth)], db=Annotated[Optional[DBClient], Depends(get_db)]):
     repo, version = repo_version.split(":", 1) if ":" in repo_version else (repo_version, None)
     # TODO: check for credit card
+    # TODO: Check if can run privates repo (is_private)
     try:
         input_tokens = count_tokens(str(body))
         result = repositories[owner][repo]['run'](body)
@@ -50,6 +51,7 @@ def run_action(owner: str, repo_version: str, action: str, body: str | dict[str,
                key_id=Annotated[str, Depends(check_auth)], db=Annotated[Optional[DBClient], Depends(get_db)]):
     repo, version = repo_version.split(":", 1) if ":" in repo_version else (repo_version, None)
     # TODO: check for credit card
+    # TODO: Check if can run privates repo (is_private)
     try:
         input_tokens = count_tokens(str(body))
         result = repositories[owner][repo][action](body)
