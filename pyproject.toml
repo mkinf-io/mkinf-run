@@ -1,19 +1,31 @@
-[tool.poetry]
+[project]
 name = "mkinf-run"
 version = "0.1.0"
 description = ""
-authors = ["mkinf <info@mkinf.io>"]
+authors = [{ name = "mkinf", email = "info@mkinf.io" }]
+requires-python = "~=3.12"
 readme = "README.md"
-package-mode = false
+dependencies = [
+    "fastapi==0.115.6",
+    "uvicorn==0.34.0",
+    "requests==2.32.3",
+    "supabase==2.11.0",
+    "gotrue==2.11.1",
+    "tiktoken==0.8.0",
+    "ddg_search",
+    "bing_search",
+    "anonymize_pii",
+    "gitingest_tool",
+    "scrapegraphai_tool",
+    "mcp>=1.2.1",
+    "termcolor>=2.5.0",
+    "e2b>=1.0.6",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-fastapi = "0.115.6"
-uvicorn = "0.34.0"
-requests = "2.32.3"
-supabase = "2.11.0"
-gotrue = "2.11.1"
-tiktoken = "0.8.0"
+[tool.uv]
+package = false
+
+[tool.uv.sources]
 ddg_search = { path = "./repositories/langchain/ddg_search" }
 bing_search = { path = "./repositories/langchain/bing_search" }
 anonymize_pii = { path = "./repositories/glaider/anonymize_pii" }
@@ -21,5 +33,5 @@ gitingest_tool = { path = "./repositories/cyclotruc/gitingest" }
 scrapegraphai_tool = { path = "./repositories/ScrapeGraphAI/scrapegraphai" }
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
