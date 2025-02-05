@@ -67,7 +67,7 @@ async def run_mcp(owner: str, repo_version: str, action: str, body: dict,
             template_id=release["template_id"],
             bootstrap_command=release["bootstrap_command"],
             args=body.get("args") or None,
-            env=body.get("env") or None)
+            envs=body.get("env") or None)
         output_tokens = count_tokens(str(result))
         count_run(db=db, key_id=key_id, owner=owner, repo=repo, action=action, version=version,
                    input_tokens=input_tokens, output_tokens=output_tokens)

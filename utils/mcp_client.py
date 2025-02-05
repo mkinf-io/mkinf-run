@@ -2,7 +2,6 @@ from termcolor import colored
 from e2b import Sandbox
 import anyio
 from anyio.streams.memory import MemoryObjectReceiveStream, MemoryObjectSendStream
-import asyncio
 from e2b.sandbox.commands.command_handle import PtySize
 import mcp.types as types
 import anyio.lowlevel
@@ -11,11 +10,10 @@ import anyio.from_thread
 from contextlib import asynccontextmanager
 from contextlib import AsyncExitStack
 from mcp import ClientSession
-import re
-from typing import Any
+from typing import Optional
 
 @asynccontextmanager
-async def stdio_client(bootstrap_command: str, template_id: str, env: list[dict] = [], timeout: int = 10):
+async def stdio_client(bootstrap_command: str, template_id: str, envs: Optional[dict[str, str]] = None, timeout: int = 10):
     """
     Client transport for stdio: connects to a server by spawning a process and
     communicating with it over stdin/stdout.
@@ -31,7 +29,7 @@ async def stdio_client(bootstrap_command: str, template_id: str, env: list[dict]
     write_stream, write_stream_reader = anyio.create_memory_object_stream()
 
     #print('Initializing sandbox...')
-    sandbox = Sandbox(template_id, timeout=timeout)
+    sandbox = Sandbox(template_id, timeout=timeout, envs=envs)
     #print('Sandbox initialized')
     #print('Starting process...')
     ptyReader = sandbox.pty.create(size=PtySize(80, 80), user='root')
@@ -110,7 +108,7 @@ async def stdio_client(bootstrap_command: str, template_id: str, env: list[dict]
         tg.start_soon(stdin_writer)
         yield read_stream, write_stream
 
-async def run_mcp_action(owner: str, repo: str, version: str | None, action: str, template_id: str, bootstrap_command: str, args: dict | None = None, env: dict | None = None):
+async def run_mcp_action(owner: str, repo: str, version: str | None, action: str, template_id: str, bootstrap_command: str, args: dict | None = None, envs: Optional[dict[str, str]] = None):
     start_time = anyio.current_time()
     #print('Creating client session...')
     exit_stack = AsyncExitStack()
@@ -120,7 +118,8 @@ async def run_mcp_action(owner: str, repo: str, version: str | None, action: str
             "stty -echo &&\n"  # Disable terminal echo
             f"{bootstrap_command}\n" # "uv run --no-sync mcp-server-diff-python\n"
         ),
-        template_id=template_id # '6qwjyhyr6ml18vcy64il'
+        template_id=template_id, # '6qwjyhyr6ml18vcy64il'
+        envs=envs
     ))
     stdio, write = stdio_transport
     session = await exit_stack.enter_async_context(ClientSession(stdio, write))
