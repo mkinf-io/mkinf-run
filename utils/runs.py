@@ -11,7 +11,7 @@ def count_run(db: DBClient, key_id: str, owner: str, repo: str, version: Optiona
         hosted_release_res = (db.table("hosted_releases")
                           .select("""
                             owner: organization_name,
-                            repository: name,
+                            repository: repository_name,
                             version,
                             build_number,
                             actions: actions(
