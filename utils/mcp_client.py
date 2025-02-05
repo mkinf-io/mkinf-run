@@ -110,17 +110,17 @@ async def stdio_client(bootstrap_command: str, template_id: str, env: list[dict]
         tg.start_soon(stdin_writer)
         yield read_stream, write_stream
 
-async def run_mcp_action(owner: str, repo: str, version: str | None, action: str, arguments: dict | None = None):
+async def run_mcp_action(owner: str, repo: str, version: str | None, action: str, template_id: str, bootstrap_command: str, args: dict | None = None, env: dict | None = None):
     start_time = anyio.current_time()
     #print('Creating client session...')
     exit_stack = AsyncExitStack()
     stdio_transport = await exit_stack.enter_async_context(stdio_client(
         bootstrap_command=(
-            "cd /mcp-server-diff-python &&\n"
+            f"cd /{repo} &&\n"
             "stty -echo &&\n"  # Disable terminal echo
-            "uv run --no-sync mcp-server-diff-python\n"
+            f"{bootstrap_command}\n" # "uv run --no-sync mcp-server-diff-python\n"
         ),
-        template_id='6qwjyhyr6ml18vcy64il'
+        template_id=template_id # '6qwjyhyr6ml18vcy64il'
     ))
     stdio, write = stdio_transport
     session = await exit_stack.enter_async_context(ClientSession(stdio, write))
@@ -141,11 +141,11 @@ async def run_mcp_action(owner: str, repo: str, version: str | None, action: str
     #print('Call tool...')
     # tools = await session.list_tools()
     response = await session.call_tool(
-        name='get-unified-diff',
-        arguments=arguments
+        name=action,
+        arguments=args
     )
     end_time = anyio.current_time()
     # print('Available tools:', tools)
-    print('Diff res:', response)
+    # print('Diff res:', response)
     print(f"Total time: {end_time - start_time}")
     return response
