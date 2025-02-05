@@ -1,4 +1,6 @@
 #!/bin/bash
+apt update
+apt install -y git
 poetry install
 playwright install
 playwright install-deps
