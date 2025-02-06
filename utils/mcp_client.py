@@ -11,9 +11,11 @@ from contextlib import asynccontextmanager
 from contextlib import AsyncExitStack
 from mcp import ClientSession
 from typing import Optional
+import re
+
 
 @asynccontextmanager
-async def stdio_client(bootstrap_command: str, template_id: str, envs: Optional[dict[str, str]] = None, timeout: int = 10):
+async def stdio_client(sandbox: Sandbox, bootstrap_command: str):
     """
     Client transport for stdio: connects to a server by spawning a process and
     communicating with it over stdin/stdout.
@@ -29,7 +31,7 @@ async def stdio_client(bootstrap_command: str, template_id: str, envs: Optional[
     write_stream, write_stream_reader = anyio.create_memory_object_stream()
 
     #print('Initializing sandbox...')
-    sandbox = Sandbox(template_id, timeout=timeout, envs=envs)
+    #sandbox = Sandbox(template_id, timeout=timeout, envs=envs)
     #print('Sandbox initialized')
     #print('Starting process...')
     ptyReader = sandbox.pty.create(size=PtySize(80, 80), user='root')
@@ -41,16 +43,19 @@ async def stdio_client(bootstrap_command: str, template_id: str, envs: Optional[
         data=bootstrap_command.encode()  # TODO: Use repo info
     )
     #print('Bootstrap command sent')
+    ansi_escape = re.compile(r'(?:\x1B[@-_][0-?]*[ -/]*[@-~])')
 
     async def stdout_reader():
         assert ptyReader, "Opened process is missing ptyReader"
         try:
           buffer = ""
           async def send_to_reader(response: bytes):
-              #print(colored(response.decode(), 'yellow'))
+              chunk = ansi_escape.sub('', response.decode())
+              # print(colored(chunk, 'yellow'))
               try:
                   nonlocal buffer
-                  lines = (buffer + response.decode()).split("\n")
+                  lines = (buffer + chunk).split("\n")
+                  # print(colored(lines, "blue"))
                   buffer = lines.pop()
 
                   for line in lines:
@@ -58,7 +63,9 @@ async def stdio_client(bootstrap_command: str, template_id: str, envs: Optional[
                           message = types.JSONRPCMessage.model_validate_json(line)
                       except Exception as exc:
                           # print(colored("EXCEPTION", 'red'))
-                          # print(colored(f"Skipping non-JSON line: {line} {exc}", 'red'))
+                          # print("Skipping non-JSON line:")
+                          # print(line)
+                          # print(exc)
                           # await read_stream_writer.send(exc)
                           continue
 
@@ -72,23 +79,18 @@ async def stdio_client(bootstrap_command: str, template_id: str, envs: Optional[
 
           def ptyWait():
               #print(colored('Starting ptyReader wait...', 'green'))
-              res = ptyReader.wait(
+              ptyReader.wait(
                   on_pty=handle_stdout,
                   on_stdout=lambda response: print(colored(response, 'yellow')),
                   on_stderr=lambda response: print(colored(response, 'red'))
               )
-              print("ptyReader.wait() returned", res)
 
           #print(colored('Waiting for ptyReader...', 'green'))
           # Run the (potentially blocking) wait call in a separate thread.
-          await anyio.to_thread.run_sync(
-              lambda: ptyWait()
-          )
-          print("ptyReader.wait() returned; keeping stdout_reader alive.")
-          await anyio.sleep_forever()
+          await anyio.to_thread.run_sync(ptyWait)
         except Exception as e:
             print(f"stdout_reader error: {e}")
-            await read_stream_writer.send(e)
+            return
 
     async def stdin_writer():
         assert sandbox.pty, "Opened process is missing pty"
@@ -110,45 +112,47 @@ async def stdio_client(bootstrap_command: str, template_id: str, envs: Optional[
     async with anyio.create_task_group() as tg:
         tg.start_soon(stdout_reader)
         tg.start_soon(stdin_writer)
-        yield read_stream, write_stream
+        yield read_stream, write_stream, ptyReader
 
 async def run_mcp_action(owner: str, repo: str, version: str | None, action: str, template_id: str, bootstrap_command: str, args: dict | None = None, envs: Optional[dict[str, str]] = None):
     start_time = anyio.current_time()
     #print('Creating client session...')
-    exit_stack = AsyncExitStack()
-    stdio_transport = await exit_stack.enter_async_context(stdio_client(
-        bootstrap_command=(
-            f"cd /{repo} &&\n"
-            "stty -echo &&\n"  # Disable terminal echo
-            f"{bootstrap_command}\n" # "uv run --no-sync mcp-server-diff-python\n"
-        ),
-        template_id=template_id, # '6qwjyhyr6ml18vcy64il'
-        envs=envs
-    ))
-    stdio, write = stdio_transport
-    session = await exit_stack.enter_async_context(ClientSession(stdio, write))
-
-    #print('Client session created')
-    #print("Waiting for server to finish bootstrapping...")
-    #await anyio.sleep(6)  # (Or use a more robust ready signal.)
-    #print('Initializing session...')
-    # This will send the "initialize" request and wait for a JSON response.
-    # await session.initialize()
-    # Why the fuck should i wait the initialization? Lets skip it
-    await session.send_notification(
-        types.ClientNotification(
-            types.InitializedNotification(method="notifications/initialized")
+    async with AsyncExitStack() as exit_stack:
+        sandbox = Sandbox(template_id, timeout=10, envs=envs)
+        stdio_transport = await exit_stack.enter_async_context(stdio_client(
+            sandbox,
+            bootstrap_command=(
+                f"cd /{repo} &&\n"
+                "stty -echo &&\n"  # Disable terminal echo
+                f"{bootstrap_command}\n" # "uv run --no-sync mcp-server-diff-python\n"
+            )
+        ))
+        stdio, write, ptyReader = stdio_transport
+        session = await exit_stack.enter_async_context(ClientSession(stdio, write))
+    
+        #print('Client session created')
+        #print("Waiting for server to finish bootstrapping...")
+        #await anyio.sleep(6)  # (Or use a more robust ready signal.)
+        #print('Initializing session...')
+        # This will send the "initialize" request and wait for a JSON response.
+        # await session.initialize()
+        # Why the fuck should i wait the initialization? Lets skip it
+        await session.send_notification(
+            types.ClientNotification(
+                types.InitializedNotification(method="notifications/initialized")
+            )
         )
-    )
-    #print('Session initialized')
-    #print('Call tool...')
-    # tools = await session.list_tools()
-    response = await session.call_tool(
-        name=action,
-        arguments=args
-    )
-    end_time = anyio.current_time()
-    # print('Available tools:', tools)
-    # print('Diff res:', response)
-    print(f"Total time: {end_time - start_time}")
-    return response
+        #print('Session initialized')
+        #print('Call tool...')
+        # tools = await session.list_tools()
+        response = await session.call_tool(
+            name=action,
+            arguments=args
+        )
+        ptyReader.kill()
+        sandbox.kill()
+        end_time = anyio.current_time()
+        # print('Available tools:', tools)
+        # print('Diff res:', response)
+        print(f"Total time: {end_time - start_time}")
+        return response
