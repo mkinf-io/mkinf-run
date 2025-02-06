@@ -35,7 +35,7 @@ async def stdio_client(bootstrap_command: str, template_id: str, envs: Optional[
     ptyReader = sandbox.pty.create(size=PtySize(80, 80), user='root')
     #print('Process started')
     #print('Sending bootstrap command...')
-
+    # print("BOOTSTRAP COMMAND:", bootstrap_command)
     sandbox.pty.send_stdin(
         pid=ptyReader.pid,
         data=bootstrap_command.encode()  # TODO: Use repo info
@@ -45,22 +45,26 @@ async def stdio_client(bootstrap_command: str, template_id: str, envs: Optional[
     async def stdout_reader():
         assert ptyReader, "Opened process is missing ptyReader"
         try:
+          buffer = ""
           async def send_to_reader(response: bytes):
-              chunk = response.decode()
-              #print(colored(chunk, 'yellow'))
-
+              #print(colored(response.decode(), 'yellow'))
               try:
-                  message = types.JSONRPCMessage.model_validate_json(chunk)
-                  #print(colored(line, 'green'))
-                  try:
-                    # print(colored("Sending message to read_stream_writer", 'green'))
-                    await read_stream_writer.send(message)
-                    # print(colored("Message sent to read_stream_writer", 'green'))
-                  except Exception as exc:
-                    print(colored(f'read_stream_writer.send error {exc}', 'red'))
-              except Exception:
-                return
-                # print(f"Skipping non-JSON line: {line} {exc}")
+                  nonlocal buffer
+                  lines = (buffer + response.decode()).split("\n")
+                  buffer = lines.pop()
+
+                  for line in lines:
+                      try:
+                          message = types.JSONRPCMessage.model_validate_json(line)
+                      except Exception as exc:
+                          # print(colored("EXCEPTION", 'red'))
+                          # print(colored(f"Skipping non-JSON line: {line} {exc}", 'red'))
+                          # await read_stream_writer.send(exc)
+                          continue
+
+                      await read_stream_writer.send(message)
+              except anyio.ClosedResourceError:
+                  await anyio.lowlevel.checkpoint()
 
           def handle_stdout(response: bytes):
               # Schedule send_to_reader on the main event loop.
