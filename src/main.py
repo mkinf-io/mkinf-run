@@ -82,4 +82,4 @@ def get_about():
 
 
 def main():
-    uvicorn.run("src.main:app", host="localhost", port=3333, reload=True)
+    uvicorn.run("src.main:app", host="localhost", port=8000, reload=True)
