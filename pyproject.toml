@@ -19,7 +19,7 @@ termcolor = "2.5.0"
 e2b = "1.0.6"
 
 [tool.poetry.scripts]
-mkinf-run = "src.main:main"
+mkinf-run = "src:main"
 
 [build-system]
 requires = ["poetry-core"]

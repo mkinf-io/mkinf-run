@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.params import Depends
 from requests import HTTPError
@@ -79,7 +78,3 @@ async def run_mcp(owner: str, repo_version: str, action: str, body: dict,
 @app.get("/about")
 def get_about():
     return {"message": "👾 mkinf hub runner"}
-
-
-def main():
-    uvicorn.run("src.main:app", host="localhost", port=8000, reload=True)
