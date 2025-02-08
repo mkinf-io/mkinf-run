@@ -8,12 +8,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.params import Depends
 from requests import HTTPError
 
-from utils.auth import check_auth
-from utils.count_tokens import count_tokens
-from utils.db_client import create_db_client, DBClient, get_db
-from utils.runs import count_run
+from src.utils.auth import check_auth
+from src.utils.count_tokens import count_tokens
+from src.utils.db_client import create_db_client, DBClient, get_db
+from src.utils.runs import count_run
+from src.utils.mcp_client import run_mcp_action
 from typing import Optional
-from utils.mcp_client import run_mcp_action
 
 app = FastAPI()
 create_db_client()
@@ -81,5 +81,5 @@ def get_about():
     return {"message": "👾 mkinf hub runner"}
 
 
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="localhost", port=3333, reload=True)
+def main():
+    uvicorn.run("src.main:app", host="localhost", port=3333, reload=True)

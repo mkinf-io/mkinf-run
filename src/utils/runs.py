@@ -1,7 +1,7 @@
 import traceback
 from typing import Optional
 
-from utils.db_client import DBClient
+from src.utils.db_client import DBClient
 
 
 def count_run(db: DBClient, key_id: str, owner: str, repo: str, version: Optional[str], action: Optional[str],

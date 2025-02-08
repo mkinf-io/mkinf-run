@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["mkinf <info@mkinf.io>"]
 readme = "README.md"
-package-mode = false
+packages = [{ include = "*", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -19,7 +19,7 @@ termcolor = "2.5.0"
 e2b = "1.0.6"
 
 [tool.poetry.scripts]
-mkinf-run = "uvicorn mkinf_run.main:app --host 0.0.0.0 --port 8000"
+mkinf-run = "src.main:main"
 
 [build-system]
 requires = ["poetry-core"]
