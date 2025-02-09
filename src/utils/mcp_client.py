@@ -118,7 +118,7 @@ async def run_mcp_action(owner: str, repo: str, version: str | None, action: str
     start_time = anyio.current_time()
     #print('Creating client session...')
     async with AsyncExitStack() as exit_stack:
-        sandbox = Sandbox(template_id, timeout=10, envs=envs)
+        sandbox = Sandbox(template_id, timeout=60, envs=envs)
         stdio_transport = await exit_stack.enter_async_context(stdio_client(
             sandbox,
             bootstrap_command=(
