@@ -61,7 +61,7 @@ async def stdio_client(sandbox: Sandbox, bootstrap_command: str):
                   for line in lines:
                       try:
                           message = types.JSONRPCMessage.model_validate_json(line)
-                      except Exception as exc:
+                      except Exception: # as exc:
                           # print(colored("EXCEPTION", 'red'))
                           # print("Skipping non-JSON line:")
                           # print(line)
@@ -114,11 +114,11 @@ async def stdio_client(sandbox: Sandbox, bootstrap_command: str):
         tg.start_soon(stdin_writer)
         yield read_stream, write_stream, ptyReader
 
-async def run_mcp_action(owner: str, repo: str, version: str | None, action: str, template_id: str, bootstrap_command: str, args: dict | None = None, envs: Optional[dict[str, str]] = None):
+async def run_mcp_action(owner: str, repo: str, version: Optional[str], action: str, template_id: str, bootstrap_command: str, args: Optional[dict] = None, envs: Optional[dict[str, str]] = None, timeout: int = 60):
     start_time = anyio.current_time()
     #print('Creating client session...')
     async with AsyncExitStack() as exit_stack:
-        sandbox = Sandbox(template_id, timeout=60, envs=envs)
+        sandbox = Sandbox(template_id, timeout=timeout, envs=envs)
         stdio_transport = await exit_stack.enter_async_context(stdio_client(
             sandbox,
             bootstrap_command=(
@@ -129,7 +129,7 @@ async def run_mcp_action(owner: str, repo: str, version: str | None, action: str
         ))
         stdio, write, ptyReader = stdio_transport
         session = await exit_stack.enter_async_context(ClientSession(stdio, write))
-    
+
         #print('Client session created')
         #print("Waiting for server to finish bootstrapping...")
         #await anyio.sleep(6)  # (Or use a more robust ready signal.)
@@ -153,6 +153,9 @@ async def run_mcp_action(owner: str, repo: str, version: str | None, action: str
         sandbox.kill()
         end_time = anyio.current_time()
         # print('Available tools:', tools)
-        # print('Diff res:', response)
+        # print('Res:', response)
         print(f"Total time: {end_time - start_time}")
-        return response
+        return {
+          "response": response,
+          "run_seconds": end_time - start_time,
+        }

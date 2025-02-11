@@ -60,11 +60,22 @@ async def run_mcp(owner: str, repo_version: str, action: str, body: dict,
           template_id=release["template_id"],
           bootstrap_command=release["bootstrap_command"],
           args=body.get("args") or None,
-          envs=body.get("env") or None)
+          envs=body.get("env") or None,
+          timeout=body.get("timeout") or 60,
+        )
         output_tokens = count_tokens(str(result))
-        count_run(db=db, key_id=key_id, owner=owner, repo=repo, action=action, version=version,
-                   input_tokens=input_tokens, output_tokens=output_tokens)
-        return result
+        count_run(
+          db=db,
+          key_id=key_id,
+          owner=owner,
+          repo=repo,
+          action=action,
+          version=version,
+          input_tokens=input_tokens,
+          output_tokens=output_tokens,
+          run_seconds=result["run_seconds"] if result else None
+        )
+        return result["response"] if result else None
     except HTTPException as e:
         raise e
     except HTTPError as e:
