@@ -15,7 +15,7 @@ import re
 
 
 @asynccontextmanager
-async def stdio_client(sandbox: Sandbox, bootstrap_command: str):
+async def stdio_client(sandbox: Sandbox, bootstrap_command: str, timeout: int):
     """
     Client transport for stdio: connects to a server by spawning a process and
     communicating with it over stdin/stdout.
@@ -34,7 +34,7 @@ async def stdio_client(sandbox: Sandbox, bootstrap_command: str):
     #sandbox = Sandbox(template_id, timeout=timeout, envs=envs)
     #print('Sandbox initialized')
     #print('Starting process...')
-    ptyReader = sandbox.pty.create(size=PtySize(80, 80), user='root')
+    ptyReader = sandbox.pty.create(size=PtySize(80, 80), user='root', timeout=timeout)
     #print('Process started')
     #print('Sending bootstrap command...')
     # print("BOOTSTRAP COMMAND:", bootstrap_command)
@@ -125,7 +125,8 @@ async def run_mcp_action(owner: str, repo: str, version: Optional[str], action: 
                 f"cd /{repo} &&\n"
                 "stty -echo &&\n"  # Disable terminal echo
                 f"{bootstrap_command}\n" # "uv run --no-sync mcp-server-diff-python\n"
-            )
+            ),
+            timeout=timeout
         ))
         stdio, write, ptyReader = stdio_transport
         session = await exit_stack.enter_async_context(ClientSession(stdio, write))
