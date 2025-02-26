@@ -8,14 +8,13 @@ import anyio.lowlevel
 import anyio.to_thread
 import anyio.from_thread
 from contextlib import asynccontextmanager
-from contextlib import AsyncExitStack
-from mcp import ClientSession
 from typing import Optional
 import re
+from src.utils.PtyWithConnect import PtyWithConnect
 
 
 @asynccontextmanager
-async def stdio_client(sandbox: Sandbox, bootstrap_command: str, timeout: int):
+async def stdio_client(sandbox: Sandbox, pid: Optional[int] = None, bootstrap_command: Optional[str] = None, timeout: int = 60):
     """
     Client transport for stdio: connects to a server by spawning a process and
     communicating with it over stdin/stdout.
@@ -34,14 +33,19 @@ async def stdio_client(sandbox: Sandbox, bootstrap_command: str, timeout: int):
     #sandbox = Sandbox(template_id, timeout=timeout, envs=envs)
     #print('Sandbox initialized')
     #print('Starting process...')
-    ptyReader = sandbox.pty.create(size=PtySize(80, 80), user='root', timeout=timeout)
-    #print('Process started')
-    #print('Sending bootstrap command...')
-    # print("BOOTSTRAP COMMAND:", bootstrap_command)
-    sandbox.pty.send_stdin(
-        pid=ptyReader.pid,
-        data=bootstrap_command.encode()  # TODO: Use repo info
-    )
+    if(pid):
+      ptyReader = PtyWithConnect(sandbox.pty).connect(pid)
+    elif(bootstrap_command):
+      ptyReader = sandbox.pty.create(size=PtySize(80, 80), user='root', timeout=timeout)
+      #print('Process started')
+      #print('Sending bootstrap command...')
+      # print("BOOTSTRAP COMMAND:", bootstrap_command)
+      sandbox.pty.send_stdin(
+          pid=ptyReader.pid,
+          data=bootstrap_command.encode()
+      )
+    else:
+      raise ValueError("No process ID or bootstrap command provided")
     #print('Bootstrap command sent')
     ansi_escape = re.compile(r'(?:\x1B[@-_][0-?]*[ -/]*[@-~])')
 
@@ -51,7 +55,7 @@ async def stdio_client(sandbox: Sandbox, bootstrap_command: str, timeout: int):
           buffer = ""
           async def send_to_reader(response: bytes):
               chunk = ansi_escape.sub('', response.decode())
-              # print(colored(chunk, 'yellow'))
+              print(colored(chunk, 'yellow'))
               try:
                   nonlocal buffer
                   lines = (buffer + chunk).split("\n")
@@ -113,50 +117,3 @@ async def stdio_client(sandbox: Sandbox, bootstrap_command: str, timeout: int):
         tg.start_soon(stdout_reader)
         tg.start_soon(stdin_writer)
         yield read_stream, write_stream, ptyReader
-
-async def run_mcp_action(owner: str, repo: str, version: Optional[str], action: str, template_id: str, bootstrap_command: str, args: Optional[dict] = None, envs: Optional[dict[str, str]] = None, timeout: int = 60):
-    start_time = anyio.current_time()
-    #print('Creating client session...')
-    async with AsyncExitStack() as exit_stack:
-        sandbox = Sandbox(template_id, timeout=timeout, envs=envs)
-        stdio_transport = await exit_stack.enter_async_context(stdio_client(
-            sandbox,
-            bootstrap_command=(
-                f"cd /{repo} &&\n"
-                "stty -echo &&\n"  # Disable terminal echo
-                f"{bootstrap_command}\n" # "uv run --no-sync mcp-server-diff-python\n"
-            ),
-            timeout=timeout
-        ))
-        stdio, write, ptyReader = stdio_transport
-        session = await exit_stack.enter_async_context(ClientSession(stdio, write))
-
-        #print('Client session created')
-        #print("Waiting for server to finish bootstrapping...")
-        #await anyio.sleep(6)  # (Or use a more robust ready signal.)
-        #print('Initializing session...')
-        # This will send the "initialize" request and wait for a JSON response.
-        # await session.initialize()
-        # Why the fuck should i wait the initialization? Lets skip it
-        await session.send_notification(
-            types.ClientNotification(
-                types.InitializedNotification(method="notifications/initialized")
-            )
-        )
-        #print('Session initialized')
-        #print('Call tool...')
-        # tools = await session.list_tools()
-        response = await session.call_tool(
-            name=action,
-            arguments=args
-        )
-        ptyReader.kill()
-        sandbox.kill()
-        end_time = anyio.current_time()
-        # print('Available tools:', tools)
-        # print('Res:', response)
-        print(f"Total time: {end_time - start_time}")
-        return {
-          "response": response,
-          "run_seconds": end_time - start_time,
-        }
