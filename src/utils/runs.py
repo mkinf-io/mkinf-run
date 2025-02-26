@@ -1,11 +1,11 @@
 import traceback
 from typing import Optional
 
-from utils.db_client import DBClient
+from src.utils.db_client import DBClient
 
 
 def count_run(db: DBClient, key_id: str, owner: str, repo: str, version: Optional[str], action: Optional[str],
-              input_tokens: int, output_tokens: Optional[int]) -> str | None:
+              input_tokens: Optional[int] = None, output_tokens: Optional[int] = None, run_seconds: Optional[float] = None) -> str | None:
     # FIXME: Calc inside this function the input and output tokens
     try:
         hosted_release_res = (db.table("hosted_releases")
@@ -51,7 +51,7 @@ def count_run(db: DBClient, key_id: str, owner: str, repo: str, version: Optiona
             "price_output_mt": selected_action["price_output_mt"],
             "price_run": selected_action["price_run"],
             "price_run_second": selected_action["price_run_second"],
-            "run_seconds": None  # FIXME: Calc run seconds
+            "run_seconds": run_seconds
         }).execute())
         # Skip check if the request has gone ok to prevent time waists
         return res.data[0]["id"]
