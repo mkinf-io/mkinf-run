@@ -7,7 +7,7 @@ import anyio.from_thread
 from contextlib import AsyncExitStack
 from mcp import ClientSession
 from typing import Optional
-from src.utils.stdio_client import stdio_client
+from src.core.stdio_client import stdio_client
 from typing import TypedDict
 
 class MCPSession:

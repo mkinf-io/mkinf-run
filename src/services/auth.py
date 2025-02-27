@@ -4,7 +4,7 @@ from fastapi import HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 from gotrue.errors import AuthApiError
 
-from src.utils.db_client import get_db, DBClient
+from src.services.db import get_db, DBClient
 from typing import Optional
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")

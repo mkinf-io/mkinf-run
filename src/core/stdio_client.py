@@ -10,7 +10,7 @@ import anyio.from_thread
 from contextlib import asynccontextmanager
 from typing import Optional
 import re
-from src.utils.PtyWithConnect import PtyWithConnect
+from src.exts.pty import PtyWithConnect
 
 
 @asynccontextmanager

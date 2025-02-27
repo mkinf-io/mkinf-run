@@ -1,7 +1,7 @@
 import traceback
 from typing import Optional
 
-from src.utils.db_client import DBClient
+from src.services.db import DBClient
 
 
 def count_run(db: DBClient, key_id: str, owner: str, repo: str, version: Optional[str], action: Optional[str],
@@ -37,6 +37,7 @@ def count_run(db: DBClient, key_id: str, owner: str, repo: str, version: Optiona
         if hosted_release_res.data is None or len(hosted_release_res.data) < 1: return
         release = hosted_release_res.data[0]
         selected_action = next((item for item in release["actions"] if item["action"] == action), None)
+        if selected_action is None: return
         res = (db
                .table("runs")
                .insert({

@@ -1,7 +1,7 @@
-from e2b.sandbox_sync.commands.pty import Pty
-from e2b.envd.process import process_pb2
 from typing import Optional
+from e2b.sandbox_sync.commands.pty import Pty
 from e2b.sandbox_sync.commands.command_handle import CommandHandle
+from e2b.envd.process import process_pb2
 from e2b.envd.rpc import handle_rpc_exception
 
 class PtyWithConnect:
