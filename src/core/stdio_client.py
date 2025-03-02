@@ -14,7 +14,7 @@ from src.exts.pty import PtyWithConnect
 
 
 @asynccontextmanager
-async def stdio_client(sandbox: Sandbox, pid: Optional[int] = None, bootstrap_command: Optional[str] = None, timeout: int = 60):
+async def stdio_client(sandbox: Sandbox, pid: Optional[int] = None, bootstrap_command: Optional[str] = None, timeout: Optional[int] = 60):
     """
     Client transport for stdio: connects to a server by spawning a process and
     communicating with it over stdin/stdout.
