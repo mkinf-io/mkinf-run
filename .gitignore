@@ -1,0 +1,14 @@
+.DS_Store
+
+/node_modules
+/build
+
+/supabase
+
+.env
+.env.development
+.env.production
+
+.vercel
+
+.vscode/settings.json

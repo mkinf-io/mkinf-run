@@ -1,0 +1,34 @@
+{
+	"ts-node": {
+		"files": true
+	},
+	"compilerOptions": {
+		/* Visit https://aka.ms/tsconfig to read more about this file */
+		"target": "esnext", /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+		"module": "commonjs", /* Specify what module code is generated. */
+		"sourceMap": true, /* Create source map files for emitted JavaScript files. */
+		"outDir": "./build", /* Specify an output folder for all emitted files. */
+		"esModuleInterop": true, /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
+		"forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
+		"strict": true, /* Enable all strict type-checking options. */
+		"strictNullChecks": true, /* When type checking, take into account 'null' and 'undefined'. */
+		"strictPropertyInitialization": true, /* Check for class properties that are declared but not set in the constructor. */
+		"noImplicitOverride": true, /* Ensure overriding members in derived classes are marked with an override modifier. */
+		"skipLibCheck": true, /* Skip type checking all .d.ts files. */
+		"paths": {
+			"*": [
+				"/node_modules/*",
+				"/src/types/*"
+			]
+		},
+		"typeRoots": [
+      "src/types",
+      "node_modules/@types"
+    ]
+	},
+	"include": [
+		"./src/**/*",
+		"src/types/express.ts",
+		"src/types/arrayExtensions.ts"
+	]
+}
