@@ -1,6 +1,5 @@
 import { RepositoryId } from '../models/dto/RepositoryId';
 import { DatabaseClient } from '../types/databaseExtensions.types';
-import { generateOrgSecretKey } from '../utils/generateKey';
 
 export default class OrgKeysRepository {
 	db: DatabaseClient;
@@ -48,18 +47,6 @@ export default class OrgKeysRepository {
 		return await query.single();
 	}
 
-	create = async (_: { name: string, organization_id: string }) => {
-		return await this.db
-			.from("org_keys")
-			.insert({
-				name: _.name,
-				organization_id: _.organization_id,
-				value: generateOrgSecretKey(),
-			})
-			.select()
-			.single();
-	}
-
 	delete = async (_: { id: string }) => {
 		return await this.db
 			.from("org_keys")
@@ -105,83 +92,6 @@ export default class OrgKeysRepository {
 		}
 		if (_.is_private != null) { query.eq("is_private", _.is_private) }
 		if (_.is_hosted != null) { query.eq("is_hosted", _.is_hosted) }
-		// DISTINCT data because of multiple keys
-		const res = await query;
-		if (!res.data) { return res }
-		const distinctData = [
-			...new Map(res.data.map(item => [`${item.owner}-${item.name}`, item])).values()
-		]
-		res.data = distinctData;
-		return res;
-	}
-
-	searchRepositories = async (_: { key_id: string, query: string, limit?: number }) => {
-		// Search query in name, owner or description
-		const query = this.db
-			.from('repositories_keys')
-			.select(`
-				owner: organization_name,
-				name,
-				description,
-				is_private,
-				is_hosted,
-				runs,
-				image,
-				created_at
-			`)
-			.or(`name.ilike.*${_.query}*, organization_name.ilike.*${_.query}*, description.ilike.*${_.query}*`)
-			.or(`key_id.eq.${_.key_id}, is_private.eq.false`);
-		// DISTINCT data because of multiple members
-		const res = await query;
-		if (!res.data) { return res }
-		const distinctData = [
-			...new Map(res.data.map(item => [`${item.owner}-${item.name}`, item])).values()
-		]
-		res.data = distinctData;
-		return res;
-	}
-
-	listFeedRepositories = async (_: { key_id: string }) => {
-		const query = this.db
-			.from("repositories_keys")
-			.select(`
-				owner: organization_name,
-				name,
-				description,
-				is_private,
-				is_hosted,
-				runs,
-				image,
-				created_at
-			`)
-			.or(`key_id.eq.${_.key_id}, is_private.eq.false`)
-			.order("created_at", { ascending: false });
-		// DISTINCT data because of multiple keys
-		const res = await query;
-		if (!res.data) { return res }
-		const distinctData = [
-			...new Map(res.data.map(item => [`${item.owner}-${item.name}`, item])).values()
-		]
-		res.data = distinctData;
-		return res;
-	}
-
-	listTrendingRepositories = async (_: { key_id: string }) => {
-		const query = this.db
-			.from("repositories_keys")
-			.select(`
-				owner: organization_name,
-				name,
-				description,
-				is_private,
-				is_hosted,
-				runs,
-				image,
-				created_at
-			`)
-			.or(`key_id.eq.${_.key_id}, is_private.eq.false`)
-			.order("runs", { ascending: false })
-			.limit(10);
 		// DISTINCT data because of multiple keys
 		const res = await query;
 		if (!res.data) { return res }
