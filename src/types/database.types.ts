@@ -76,6 +76,7 @@ export type Database = {
           created_at: string
           env_variables: Json
           organization_name: string
+          pid: number | null
           price_run_second: number
           repository_name: string
           template_id: string | null
@@ -87,6 +88,7 @@ export type Database = {
           created_at?: string
           env_variables?: Json
           organization_name: string
+          pid?: number | null
           price_run_second?: number
           repository_name: string
           template_id?: string | null
@@ -98,6 +100,7 @@ export type Database = {
           created_at?: string
           env_variables?: Json
           organization_name?: string
+          pid?: number | null
           price_run_second?: number
           repository_name?: string
           template_id?: string | null
