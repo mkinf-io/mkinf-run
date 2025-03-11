@@ -59,6 +59,7 @@ export default class HostedReleasesRepository {
 						env_variables,
 						template_id,
 						bootstrap_command,
+						pid,
 						price_run_second,
 						actions: actions(
 							action,
@@ -104,6 +105,7 @@ export default class HostedReleasesRepository {
 						env_variables,
 						template_id,
 						bootstrap_command,
+						pid,
 						price_run_second,
 						actions: actions(
 							action,

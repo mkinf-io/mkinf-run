@@ -8,7 +8,7 @@ import { ReadBuffer, serializeMessage } from "../utils/ReadBuffer";
 import stripAnsi from "../utils/stripAnsi";
 
 export type SandboxServerParameters = {
-  command: string;
+  command?: string;
   template_id: string;
   timeout: number;
   args?: string[];
@@ -80,37 +80,58 @@ export class SandboxClientTransport implements Transport {
           this._serverParams.template_id,
           {
             timeoutMs: this._serverParams.timeout ? this._serverParams.timeout * 1000 : undefined,
-            envs: this._serverParams.env ?? undefined
+            envs: this._serverParams.env ?? undefined,
           }
         );
-
-        this._commandHandle = await this._sandbox?.pty.create({
-          cols: 80,
-          rows: 80,
-          user: 'root',
-          envs: this._serverParams.env,
-          cwd: this._serverParams.cwd,
-          timeoutMs: this._serverParams.timeout * 1000,
-          onData: async (chunk: Uint8Array) => {
-            const textChunk = stripAnsi(new TextDecoder().decode(chunk));
-            console.log("OUT:\n", JSON.stringify(textChunk).yellow.bold);
-            if (this._needsInitialization) {
-              if (textChunk == "~ $ ") {
-                console.log("Send command");
-                this._sandbox?.pty.sendInput(this._commandHandle?.pid!, new TextEncoder().encode(this._serverParams.command));
-                return;
-              }
-              if (textChunk.includes(this._serverParams.command.trim())) {
-                console.log("MCP Ready");
-                this._needsInitialization = false;
-                resolve();
-                return;
-              }
+        if (this._serverParams.pid) {
+          // For prewarmed sandboxes
+          this._commandHandle = await this._sandbox.commands.connect(
+            this._serverParams.pid,
+            {
+              onStdout: (chunk: string) => {
+                console.log("OUT PREW:\n", chunk.yellow.bold);
+                this._readBuffer.append(Buffer.from(chunk));
+                this.processReadBuffer();
+              },
+              onStderr: (error: string) => {
+                if (error) {
+                  console.log("ERR:\n", error.red);
+                  this.onerror?.(Error(error));
+                }
+              },
             }
-            this._readBuffer.append(Buffer.from(chunk));
-            this.processReadBuffer();
-          },
-        });
+          );
+          resolve();
+        } else if (this._serverParams.command) {
+          // For cold sandboxes
+          this._commandHandle = await this._sandbox?.pty.create({
+            cols: 80,
+            rows: 80,
+            user: 'root',
+            envs: this._serverParams.env,
+            cwd: this._serverParams.cwd,
+            timeoutMs: this._serverParams.timeout * 1000,
+            onData: async (chunk: Uint8Array) => {
+              const textChunk = stripAnsi(new TextDecoder().decode(chunk));
+              console.log("OUT:\n", JSON.stringify(textChunk).yellow.bold);
+              if (this._needsInitialization) {
+                if (textChunk == "~ $ ") {
+                  console.log("Send command");
+                  this._sandbox?.pty.sendInput(this._commandHandle?.pid!, new TextEncoder().encode(this._serverParams.command));
+                  return;
+                }
+                if (this._serverParams.command && textChunk.includes(this._serverParams.command.trim())) {
+                  console.log("MCP Ready");
+                  this._needsInitialization = false;
+                  resolve();
+                  return;
+                }
+              }
+              this._readBuffer.append(Buffer.from(chunk));
+              this.processReadBuffer();
+            },
+          });
+        }
       }
       this._commandHandle?.wait()
         .then(() => {
