@@ -127,7 +127,7 @@ export default class HostedReleasesRepository {
 			.or(`key_id.eq.${_.key_id}, is_private.eq.false`);
 		return {
 			...res,
-			data: res.data?.[0]["hosted_releases"][0]
+			data: res.data?.[0]?.["hosted_releases"]?.[0]
 		}
 	}
 }
