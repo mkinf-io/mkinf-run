@@ -1,4 +1,4 @@
-import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse";
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { Request, Response } from 'express';
 import MCPClient from '../../models/MCPClient';
 import HostedReleasesRepository from '../../repositories/HostedReleasesRepository';
@@ -7,7 +7,7 @@ import { SandboxClientTransport } from '../../services/SandboxClientTransport';
 // Store multiple transports per client
 const sseTransports = new Map<string, SSEServerTransport>();
 
-// GET /:owner/:repo/:action/sse
+// GET /:owner/:repo/sse
 export const sse = async (req: Request, res: Response) => {
 	try {
 		if (!req.db) { return res.status(500).json({ status: 500, message: "Server error" }); }
@@ -23,11 +23,6 @@ export const sse = async (req: Request, res: Response) => {
 		const latestRelease = latestReleaseRes.data;
 		if (!latestRelease.bootstrap_command) { return res.status(500).json({ status: 500, message: "Missing bootstrap command" }); }
 		if (!latestRelease.template_id) { return res.status(500).json({ status: 500, message: "Missing template ID" }); }
-		// Check if the action exists
-		const action = latestRelease.actions.find((e) => e.action == req.params.action);
-		if (!action) { return res.status(404).json({ status: 404, message: "Action not found" }); }
-		// Count input tokens
-		// const inputTokens = countTokens(JSON.stringify(req.body.args));
 		// Set up SSE transport
 		console.log("Messages path:", `${req.path}/messages`);
 		const sseTransport = new SSEServerTransport(`${req.path}/messages`, res);
@@ -56,6 +51,8 @@ export const sse = async (req: Request, res: Response) => {
 		const startTimer = Date.now();
 		// Connect to the sandbox with initialization
 		await client.connectWithoutInit(transport);
+		// Start the SSE stream
+		await sseTransport.start();
 		// End timer
 		const endTimer = Date.now();
 		const duration = endTimer - startTimer;

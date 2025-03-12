@@ -1,4 +1,3 @@
-import { Server } from '@modelcontextprotocol/sdk/server/index';
 import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
@@ -11,7 +10,6 @@ import './types/express';
 
 const app = express();
 const port = process.env.PORT || 3434;
-const server = new Server({ name: "mkinf-run", version: "1.0.0" }, { capabilities: {} });
 
 // app.use(logging.requestLogger);
 app.use(express.json({ limit: '10mb' }));

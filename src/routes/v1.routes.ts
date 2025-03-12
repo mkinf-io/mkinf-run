@@ -1,14 +1,17 @@
 import express from 'express';
 import { listToolsOnce, runActionOnce } from '../controllers/v1/runController';
+import { messages, sse } from '../controllers/v1/sseController';
 
 const v1Router = express.Router({ mergeParams: true });
+
+// SSE
+v1Router.get('/:owner/:repo/sse', sse);
+v1Router.get('/:owner/:repo/messages', messages);
 
 // List Tools Once
 v1Router.get('/:owner/:repo', listToolsOnce);
 // Run Action Once
 v1Router.post('/:owner/:repo/:action', runActionOnce);
 
-// SSE
-v1Router.get('/:owner/:repo/:action/sse', );
 
 export default v1Router;
