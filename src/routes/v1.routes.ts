@@ -8,4 +8,7 @@ v1Router.get('/:owner/:repo', listToolsOnce);
 // Run Action Once
 v1Router.post('/:owner/:repo/:action', runActionOnce);
 
+// SSE
+v1Router.get('/:owner/:repo/:action/sse', );
+
 export default v1Router;
