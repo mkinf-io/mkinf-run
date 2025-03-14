@@ -5,7 +5,7 @@ import HostedReleasesRepository from '../../repositories/HostedReleasesRepositor
 import { SandboxClientTransport } from '../../services/SandboxClientTransport';
 
 // Store multiple transports per client
-const sseTransports = new Map<string, SSEServerTransport>();
+const transports = new Map<string, { sseTransport: SSEServerTransport, sbxTransport: SandboxClientTransport }>();
 
 // GET /:owner/:repo/sse
 export const sse = async (req: Request, res: Response) => {
@@ -24,33 +24,48 @@ export const sse = async (req: Request, res: Response) => {
 		if (!latestRelease.bootstrap_command) { return res.status(500).json({ status: 500, message: "Missing bootstrap command" }); }
 		if (!latestRelease.template_id) { return res.status(500).json({ status: 500, message: "Missing template ID" }); }
 		// Set up SSE transport
-		console.log("Messages path:", `${req.path}/messages`);
-		const sseTransport = new SSEServerTransport(`${req.path}/messages`, res);
+		const messagePath = `/v1/${req.params.owner}/${req.params.repo}/messages`;
+		console.log("Messages path:", messagePath);
+		const sseTransport = new SSEServerTransport(messagePath, res);
 		const sessionId = sseTransport.sessionId;
 		console.log("Session id:", sessionId);
-		sseTransports.set(sessionId, sseTransport);
 		// Create a new SandboxClientTransport instance
-		const transport = new SandboxClientTransport({
+		const sbxTransport = new SandboxClientTransport({
 			command: `cd /${latestRelease.repository} && stty -echo && ${latestRelease.bootstrap_command}\n`,
 			template_id: latestRelease.template_id,
-			timeout: +(req.query.timeout ?? 60),
+			timeout: +(req.query.timeout ?? 600),
 			env: req.query.env ? JSON.parse(req.query.env.toString()) : {}
 		});
-		// Set up event listeners
-		transport.onmessage = (message) => { sseTransport.onmessage?.(message); };
-		transport.onclose = () => {
-			console.log(`Transport ${sessionId} closed`);
-			transport.close();
-			sseTransport.close();
-			sseTransports.delete(sessionId);
-		};
-		transport.onerror = (error) => { sseTransport.onerror?.(error); };
+		transports.set(sessionId, { sseTransport: sseTransport, sbxTransport: sbxTransport });
 		// Create a new MCPClient instance
-		const client = new MCPClient({ name: "mkinf-client", version: req.body.client_version ?? "1.0.0" });
+		const client = new MCPClient({ name: "mkinf-client", version: "1.0.0" });
 		// Start timer
 		const startTimer = Date.now();
 		// Connect to the sandbox with initialization
-		await client.connectWithoutInit(transport);
+		await client.connectWithoutInit(sbxTransport);
+		// Set up event listeners
+		sbxTransport.onmessage = (message) => {
+			console.log("Send message to sse:", message);
+			sseTransport.send(message);
+		};
+		sbxTransport.onclose = () => {
+			console.log(`Transport ${sessionId} closed from sbx`);
+			transports.delete(sessionId);
+		};
+		sbxTransport.onerror = (error) => {
+			console.error("Transport error:", error);
+		};
+		sseTransport.onmessage = async (message) => {
+			console.log("Send message to sbx:", message);
+			sbxTransport.send(message);
+		};
+		sseTransport.onclose = async () => {
+			console.log(`Transport ${sessionId} closed from sse`);
+			transports.delete(sessionId);
+		};
+		sseTransport.onerror = (error) => {
+			console.error("Transport error:", error);
+		};
 		// Start the SSE stream
 		await sseTransport.start();
 		// End timer
@@ -60,9 +75,9 @@ export const sse = async (req: Request, res: Response) => {
 		// Listen for client disconnection
 		req.on("close", async () => {
 			console.log(`Client disconnected: ${sessionId}`);
-			transport.close();
+			sbxTransport.close();
 			sseTransport.close();
-			sseTransports.delete(sessionId);
+			transports.delete(sessionId);
 			console.log(`Deleted session ${sessionId} from database`);
 		});
 	} catch (error) {
@@ -75,7 +90,8 @@ export const sse = async (req: Request, res: Response) => {
 export const messages = async (req: Request, res: Response) => {
 	const { sessionId } = req.query;
 	if (!sessionId) { return res.status(400).send("Missing sessionId"); }
-	const transport = sseTransports.get(sessionId.toString());
-	if (!transport) { return res.status(404).send(`No active SSE transport for sessionId: ${sessionId}`); }
-	transport.handlePostMessage(req, res);
+	const { sseTransport, sbxTransport } = transports.get(sessionId.toString()) ?? {};
+	if (!sseTransport || !sbxTransport) { return res.status(404).send(`No active SSE transport for sessionId: ${sessionId}`); }
+	console.log("Received POST request for messages");
+	await sseTransport.handlePostMessage(req, res);
 }

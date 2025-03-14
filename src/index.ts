@@ -12,7 +12,7 @@ const app = express();
 const port = process.env.PORT || 3434;
 
 // app.use(logging.requestLogger);
-app.use(express.json({ limit: '10mb' }));
+//app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 app.use(DB.init);
 app.use(rootRoutes);

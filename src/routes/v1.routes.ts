@@ -6,7 +6,6 @@ const v1Router = express.Router({ mergeParams: true });
 
 // SSE
 v1Router.get('/:owner/:repo/sse', sse);
-v1Router.get('/:owner/:repo/messages', messages);
 
 // List Tools Once
 v1Router.get('/:owner/:repo', listToolsOnce);

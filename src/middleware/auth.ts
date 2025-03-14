@@ -4,6 +4,7 @@ import OrgKeysRepository from '../repositories/OrgKeysRepository';
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
 	try {
+		console.log("Auth middleware", req.path)
 		if (!req.db) { return res.status(500).json({ status: 500, message: "Server error" }); }
 
 		const authorizationSplit = req.headers.authorization?.split(" ")
