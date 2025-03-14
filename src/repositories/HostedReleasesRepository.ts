@@ -39,7 +39,7 @@ export default class HostedReleasesRepository {
 			.eq("is_hosted", true)
 			.eq("organization_name", _.owner)
 			.eq("name", _.repository)
-			.or(`key_id.eq.${_.key_id}, is_private.eq.false`)
+		//.or(`key_id.eq.${_.key_id}, is_private.eq.false`)
 		return {
 			...res,
 			data: res.data?.[0]["hosted_releases"]
@@ -78,7 +78,7 @@ export default class HostedReleasesRepository {
 			.eq("is_hosted", true)
 			.eq("organization_name", _.owner)
 			.eq("name", _.repository)
-			.or(`key_id.eq.${_.key_id}, is_private.eq.false`);
+		//.or(`key_id.eq.${_.key_id}, is_private.eq.false`);
 		if (_.build_number) { query.eq("hosted_releases.build_number", _.build_number); }
 		if (_.version) {
 			query.eq("hosted_releases.version", _.version)
@@ -124,7 +124,7 @@ export default class HostedReleasesRepository {
 			.eq("is_hosted", true)
 			.eq("organization_name", _.owner)
 			.eq("name", _.repository)
-			.or(`key_id.eq.${_.key_id}, is_private.eq.false`);
+		//.or(`key_id.eq.${_.key_id}, is_private.eq.false`);
 		return {
 			...res,
 			data: res.data?.[0]?.["hosted_releases"]?.[0]

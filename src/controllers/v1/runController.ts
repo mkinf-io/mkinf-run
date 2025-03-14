@@ -23,13 +23,13 @@ export const listToolsOnce = async (req: Request, res: Response) => {
 		if (!latestRelease.template_id) { return res.status(500).json({ status: 500, message: "Missing template ID" }); }
 		// Create a new SandboxClientTransport instance
 		const transport = new SandboxClientTransport({
-			command: `cd /${latestRelease.repository} && stty -echo && ${latestRelease.bootstrap_command}\n`,
+			command: `stty -echo && ${latestRelease.bootstrap_command}\n`,
 			template_id: latestRelease.template_id,
-			timeout: req.body.timeout ?? 20,
-			env: req.body.env
+			timeout: +(req.query.timeout ?? 20),
+			env: req.query.env ? JSON.parse(req.query.env.toString()) : {}
 		});
 		// Create a new MCPClient instance
-		const client = new MCPClient({ name: "mkinf-client", version: req.body.client_version ?? "1.0.0" });
+		const client = new MCPClient({ name: "mkinf-client", version: req.query.client_version?.toString() ?? "1.0.0" });
 		// Start timer
 		const startTimer = Date.now();
 		// Connect to the sandbox without MCP initialization
@@ -89,7 +89,7 @@ export const runActionOnce = async (req: Request, res: Response) => {
 		const inputTokens = countTokens(JSON.stringify(req.body.args));
 		// Create a new SandboxClientTransport instance
 		const transport = new SandboxClientTransport({
-			command: `cd /${latestRelease.repository} && stty -echo && ${latestRelease.bootstrap_command}\n`,
+			command: `stty -echo && ${latestRelease.bootstrap_command}\n`,
 			template_id: latestRelease.template_id,
 			timeout: req.body.timeout ?? 60,
 			env: req.body.env

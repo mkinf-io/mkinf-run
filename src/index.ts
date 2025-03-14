@@ -12,7 +12,7 @@ const app = express();
 const port = process.env.PORT || 3434;
 
 // app.use(logging.requestLogger);
-app.use(express.json({ limit: '10mb' }));
+//app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 app.use(DB.init);
 app.use(rootRoutes);
@@ -22,11 +22,11 @@ app.use(notImplementedRoutes);
 process.on('exit', logging.flush);
 
 process.on('uncaughtException', (err) => {
-	console.error('Uncaught Exception:', err);
+  console.error('Uncaught Exception:', err);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-	console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
 app.listen(port, () => console.log(`mkinf run API 👾 v1 is running on http://localhost:${port}`));
