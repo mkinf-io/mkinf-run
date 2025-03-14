@@ -31,7 +31,7 @@ export const sse = async (req: Request, res: Response) => {
 		console.log("Session id:", sessionId);
 		// Create a new SandboxClientTransport instance
 		const sbxTransport = new SandboxClientTransport({
-			command: `cd /${latestRelease.repository} && stty -echo && ${latestRelease.bootstrap_command}\n`,
+			command: `stty -echo && ${latestRelease.bootstrap_command}\n`,
 			template_id: latestRelease.template_id,
 			timeout: +(req.query.timeout ?? 600),
 			env: req.query.env ? JSON.parse(req.query.env.toString()) : {}
