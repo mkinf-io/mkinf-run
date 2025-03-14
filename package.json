@@ -1,0 +1,36 @@
+{
+  "name": "mkinf-run",
+  "version": "0.1",
+  "description": "mkinf run API v1",
+  "main": "index.js",
+  "scripts": {
+    "start": "node build/index.js",
+    "build": "npx tsc",
+    "dev": "nodemon src/index.ts",
+    "gen-types": "supabase gen types typescript --project-id ixiebmbsgmofazvodcwb > src/types/database.types.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@logtail/node": "^0.5.2",
+    "@logtail/winston": "^0.5.2",
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "@supabase/supabase-js": "^2.43.0",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "e2b": "^1.0.7",
+    "express": "^4.19.2",
+    "express-winston": "^4.2.0",
+    "stripe": "^15.11.0",
+    "superstruct": "^2.0.2",
+    "tiktoken": "^1.0.20",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  }
+}
