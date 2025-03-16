@@ -25,4 +25,3 @@ const getDatabaseClient = (p: { accessToken?: string }): Result<DatabaseClient, 
 }
 
 export { getDatabaseClient, getServiceDatabaseClient };
-

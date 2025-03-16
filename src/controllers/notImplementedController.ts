@@ -8,4 +8,4 @@ const notImplemented = async (_req: Request, res: Response) => {
 	}
 };
 
-export { notImplemented }
+export { notImplemented };

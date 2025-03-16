@@ -1,6 +1,6 @@
 import { SandboxError } from 'e2b'
-import { ConnectResponse, StartResponse } from './process_pb'
 import { handleRpcError } from './CommandsExt'
+import { ConnectResponse, StartResponse } from './process_pb'
 
 declare const __brand: unique symbol
 type Brand<B> = { [__brand]: B }
@@ -112,7 +112,7 @@ export class CommandHandle
   /**
    * Command execution exit code.
    * `0` if the command finished successfully.
-   * 
+   *
    * It is `undefined` if the command is still running.
    */
   get exitCode() {
@@ -143,7 +143,7 @@ export class CommandHandle
   /**
    * Wait for the command to finish and return the result.
    * If the command exits with a non-zero exit code, it throws a `CommandExitError`.
-   * 
+   *
    * @returns `CommandResult` result of command execution.
    */
   async wait() {
@@ -166,7 +166,7 @@ export class CommandHandle
 
   /**
    * Disconnect from the command.
-   * 
+   *
    * The command is not killed, but SDK stops receiving events from the command.
    * You can reconnect to the command using {@link Commands.connect}.
    */
@@ -177,7 +177,7 @@ export class CommandHandle
   /**
    * Kill the command.
    * It uses `SIGKILL` signal to kill the command.
-   * 
+   *
    * @returns `true` if the command was killed successfully, `false` if the command was not found.
    */
   async kill() {

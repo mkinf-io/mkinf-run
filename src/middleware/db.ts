@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { getServiceDatabaseClient } from '../services/supabase';
 
 export default class DB {

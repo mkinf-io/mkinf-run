@@ -10,4 +10,4 @@ function firstOrNull<T>(array: T[]): T | null {
 	return (0 < array.length) ? array[0] : null;
 }
 
-export { getOrNull, getOrDefault, firstOrNull };
+export { firstOrNull, getOrDefault, getOrNull };

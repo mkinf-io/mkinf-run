@@ -1,8 +1,8 @@
 import { Logtail } from '@logtail/node';
-import expressWinston from 'express-winston';
-import winston from 'winston';
 import { LogtailTransport } from '@logtail/winston';
 import express from 'express';
+import expressWinston from 'express-winston';
+import winston from 'winston';
 
 const logtail = new Logtail(process.env.BETTERSTACK_SOURCE_TOKEN || '', {
 	endpoint: "https://s1211998.eu-nbg-2.betterstackdata.com",
@@ -75,4 +75,4 @@ export default {
 	requestLogger,
 	errorLogger,
 	flush
-}; 
+};
