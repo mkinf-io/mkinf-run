@@ -1,7 +1,7 @@
 import { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import { JSONRPCMessage } from "@modelcontextprotocol/sdk/types.js";
 import 'colors';
-import { CommandHandle, Sandbox } from 'e2b';
+import { CommandExitError, CommandHandle, Sandbox } from 'e2b';
 import { Stream } from "stream";
 import { CommandsExt } from "../utils/CommandsExt";
 import { ReadBuffer, serializeMessage } from "../utils/ReadBuffer";
@@ -114,15 +114,18 @@ export class SandboxClientTransport implements Transport {
       }
       this._commandHandle?.wait()
         .then(() => {
+          console.log("EXIT");
           if (this._commandHandle?.stderr != undefined && this._commandHandle?.stderr.length > 0) {
+            console.log("EXIT THEN ERR");
             console.log("ERR:\n", this._commandHandle?.stderr.red);
             this.onerror?.(Error(this._commandHandle?.stderr))
           }
         }).catch((error) => {
-          if (error) {
-            console.log("ERR:\n", error.red);
-            this.onerror?.(error);
-          }
+         if(error instanceof CommandExitError){ return }
+          console.log("ERR EXIT");
+          console.log("ERR:\n", error);
+          console.log("STDERR:\n", this._commandHandle?.stderr?.red);
+          this.onerror?.(error);
         })
     });
   }
