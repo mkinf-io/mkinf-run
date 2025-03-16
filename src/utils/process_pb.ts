@@ -2,24 +2,24 @@
 // @generated from file process/process.proto (package process, syntax proto3)
 /* eslint-disable */
 
+import type { Message } from "@bufbuild/protobuf";
 import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv1";
 import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv1";
-import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file process/process.proto.
  */
 export const file_process_process: GenFile = /*@__PURE__*/
-  fileDesc("ChVwcm9jZXNzL3Byb2Nlc3MucHJvdG8SB3Byb2Nlc3MiSgoDUFRZEh8KBHNpemUYASABKAsyES5wcm9jZXNzLlBUWS5TaXplGiIKBFNpemUSDAoEY29scxgBIAEoDRIMCgRyb3dzGAIgASgNIqEBCg1Qcm9jZXNzQ29uZmlnEgsKA2NtZBgBIAEoCRIMCgRhcmdzGAIgAygJEi4KBGVudnMYAyADKAsyIC5wcm9jZXNzLlByb2Nlc3NDb25maWcuRW52c0VudHJ5EhAKA2N3ZBgEIAEoCUgAiAEBGisKCUVudnNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBQgYKBF9jd2QiDQoLTGlzdFJlcXVlc3QiXAoLUHJvY2Vzc0luZm8SJgoGY29uZmlnGAEgASgLMhYucHJvY2Vzcy5Qcm9jZXNzQ29uZmlnEgsKA3BpZBgCIAEoDRIQCgN0YWcYAyABKAlIAIgBAUIGCgRfdGFnIjcKDExpc3RSZXNwb25zZRInCglwcm9jZXNzZXMYASADKAsyFC5wcm9jZXNzLlByb2Nlc3NJbmZvInkKDFN0YXJ0UmVxdWVzdBInCgdwcm9jZXNzGAEgASgLMhYucHJvY2Vzcy5Qcm9jZXNzQ29uZmlnEh4KA3B0eRgCIAEoCzIMLnByb2Nlc3MuUFRZSACIAQESEAoDdGFnGAMgASgJSAGIAQFCBgoEX3B0eUIGCgRfdGFnImIKDVVwZGF0ZVJlcXVlc3QSKQoHcHJvY2VzcxgBIAEoCzIYLnByb2Nlc3MuUHJvY2Vzc1NlbGVjdG9yEh4KA3B0eRgCIAEoCzIMLnByb2Nlc3MuUFRZSACIAQFCBgoEX3B0eSIQCg5VcGRhdGVSZXNwb25zZSKvAwoMUHJvY2Vzc0V2ZW50EjEKBXN0YXJ0GAEgASgLMiAucHJvY2Vzcy5Qcm9jZXNzRXZlbnQuU3RhcnRFdmVudEgAEi8KBGRhdGEYAiABKAsyHy5wcm9jZXNzLlByb2Nlc3NFdmVudC5EYXRhRXZlbnRIABItCgNlbmQYAyABKAsyHi5wcm9jZXNzLlByb2Nlc3NFdmVudC5FbmRFdmVudEgAEjQKCWtlZXBhbGl2ZRgEIAEoCzIfLnByb2Nlc3MuUHJvY2Vzc0V2ZW50LktlZXBBbGl2ZUgAGhkKClN0YXJ0RXZlbnQSCwoDcGlkGAEgASgNGkgKCURhdGFFdmVudBIQCgZzdGRvdXQYASABKAxIABIQCgZzdGRlcnIYAiABKAxIABINCgNwdHkYAyABKAxIAEIICgZvdXRwdXQaWwoIRW5kRXZlbnQSEQoJZXhpdF9jb2RlGAEgASgREg4KBmV4aXRlZBgCIAEoCBIOCgZzdGF0dXMYAyABKAkSEgoFZXJyb3IYBCABKAlIAIgBAUIICgZfZXJyb3IaCwoJS2VlcEFsaXZlQgcKBWV2ZW50IjUKDVN0YXJ0UmVzcG9uc2USJAoFZXZlbnQYASABKAsyFS5wcm9jZXNzLlByb2Nlc3NFdmVudCI3Cg9Db25uZWN0UmVzcG9uc2USJAoFZXZlbnQYASABKAsyFS5wcm9jZXNzLlByb2Nlc3NFdmVudCJjChBTZW5kSW5wdXRSZXF1ZXN0EikKB3Byb2Nlc3MYASABKAsyGC5wcm9jZXNzLlByb2Nlc3NTZWxlY3RvchIkCgVpbnB1dBgCIAEoCzIVLnByb2Nlc3MuUHJvY2Vzc0lucHV0IhMKEVNlbmRJbnB1dFJlc3BvbnNlIjcKDFByb2Nlc3NJbnB1dBIPCgVzdGRpbhgBIAEoDEgAEg0KA3B0eRgCIAEoDEgAQgcKBWlucHV0IsICChJTdHJlYW1JbnB1dFJlcXVlc3QSNwoFc3RhcnQYASABKAsyJi5wcm9jZXNzLlN0cmVhbUlucHV0UmVxdWVzdC5TdGFydEV2ZW50SAASNQoEZGF0YRgCIAEoCzIlLnByb2Nlc3MuU3RyZWFtSW5wdXRSZXF1ZXN0LkRhdGFFdmVudEgAEjoKCWtlZXBhbGl2ZRgDIAEoCzIlLnByb2Nlc3MuU3RyZWFtSW5wdXRSZXF1ZXN0LktlZXBBbGl2ZUgAGjcKClN0YXJ0RXZlbnQSKQoHcHJvY2VzcxgBIAEoCzIYLnByb2Nlc3MuUHJvY2Vzc1NlbGVjdG9yGjEKCURhdGFFdmVudBIkCgVpbnB1dBgCIAEoCzIVLnByb2Nlc3MuUHJvY2Vzc0lucHV0GgsKCUtlZXBBbGl2ZUIHCgVldmVudCIVChNTdHJlYW1JbnB1dFJlc3BvbnNlIl8KEVNlbmRTaWduYWxSZXF1ZXN0EikKB3Byb2Nlc3MYASABKAsyGC5wcm9jZXNzLlByb2Nlc3NTZWxlY3RvchIfCgZzaWduYWwYAiABKA4yDy5wcm9jZXNzLlNpZ25hbCIUChJTZW5kU2lnbmFsUmVzcG9uc2UiOwoOQ29ubmVjdFJlcXVlc3QSKQoHcHJvY2VzcxgBIAEoCzIYLnByb2Nlc3MuUHJvY2Vzc1NlbGVjdG9yIjsKD1Byb2Nlc3NTZWxlY3RvchINCgNwaWQYASABKA1IABINCgN0YWcYAiABKAlIAEIKCghzZWxlY3RvcipICgZTaWduYWwSFgoSU0lHTkFMX1VOU1BFQ0lGSUVEEAASEgoOU0lHTkFMX1NJR1RFUk0QDxISCg5TSUdOQUxfU0lHS0lMTBAJMsoDCgdQcm9jZXNzEjMKBExpc3QSFC5wcm9jZXNzLkxpc3RSZXF1ZXN0GhUucHJvY2Vzcy5MaXN0UmVzcG9uc2USPgoHQ29ubmVjdBIXLnByb2Nlc3MuQ29ubmVjdFJlcXVlc3QaGC5wcm9jZXNzLkNvbm5lY3RSZXNwb25zZTABEjgKBVN0YXJ0EhUucHJvY2Vzcy5TdGFydFJlcXVlc3QaFi5wcm9jZXNzLlN0YXJ0UmVzcG9uc2UwARI5CgZVcGRhdGUSFi5wcm9jZXNzLlVwZGF0ZVJlcXVlc3QaFy5wcm9jZXNzLlVwZGF0ZVJlc3BvbnNlEkoKC1N0cmVhbUlucHV0EhsucHJvY2Vzcy5TdHJlYW1JbnB1dFJlcXVlc3QaHC5wcm9jZXNzLlN0cmVhbUlucHV0UmVzcG9uc2UoARJCCglTZW5kSW5wdXQSGS5wcm9jZXNzLlNlbmRJbnB1dFJlcXVlc3QaGi5wcm9jZXNzLlNlbmRJbnB1dFJlc3BvbnNlEkUKClNlbmRTaWduYWwSGi5wcm9jZXNzLlNlbmRTaWduYWxSZXF1ZXN0GhsucHJvY2Vzcy5TZW5kU2lnbmFsUmVzcG9uc2VCVwoLY29tLnByb2Nlc3NCDFByb2Nlc3NQcm90b1ABogIDUFhYqgIHUHJvY2Vzc8oCB1Byb2Nlc3PiAhNQcm9jZXNzXEdQQk1ldGFkYXRh6gIHUHJvY2Vzc2IGcHJvdG8z");
+	fileDesc("ChVwcm9jZXNzL3Byb2Nlc3MucHJvdG8SB3Byb2Nlc3MiSgoDUFRZEh8KBHNpemUYASABKAsyES5wcm9jZXNzLlBUWS5TaXplGiIKBFNpemUSDAoEY29scxgBIAEoDRIMCgRyb3dzGAIgASgNIqEBCg1Qcm9jZXNzQ29uZmlnEgsKA2NtZBgBIAEoCRIMCgRhcmdzGAIgAygJEi4KBGVudnMYAyADKAsyIC5wcm9jZXNzLlByb2Nlc3NDb25maWcuRW52c0VudHJ5EhAKA2N3ZBgEIAEoCUgAiAEBGisKCUVudnNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBQgYKBF9jd2QiDQoLTGlzdFJlcXVlc3QiXAoLUHJvY2Vzc0luZm8SJgoGY29uZmlnGAEgASgLMhYucHJvY2Vzcy5Qcm9jZXNzQ29uZmlnEgsKA3BpZBgCIAEoDRIQCgN0YWcYAyABKAlIAIgBAUIGCgRfdGFnIjcKDExpc3RSZXNwb25zZRInCglwcm9jZXNzZXMYASADKAsyFC5wcm9jZXNzLlByb2Nlc3NJbmZvInkKDFN0YXJ0UmVxdWVzdBInCgdwcm9jZXNzGAEgASgLMhYucHJvY2Vzcy5Qcm9jZXNzQ29uZmlnEh4KA3B0eRgCIAEoCzIMLnByb2Nlc3MuUFRZSACIAQESEAoDdGFnGAMgASgJSAGIAQFCBgoEX3B0eUIGCgRfdGFnImIKDVVwZGF0ZVJlcXVlc3QSKQoHcHJvY2VzcxgBIAEoCzIYLnByb2Nlc3MuUHJvY2Vzc1NlbGVjdG9yEh4KA3B0eRgCIAEoCzIMLnByb2Nlc3MuUFRZSACIAQFCBgoEX3B0eSIQCg5VcGRhdGVSZXNwb25zZSKvAwoMUHJvY2Vzc0V2ZW50EjEKBXN0YXJ0GAEgASgLMiAucHJvY2Vzcy5Qcm9jZXNzRXZlbnQuU3RhcnRFdmVudEgAEi8KBGRhdGEYAiABKAsyHy5wcm9jZXNzLlByb2Nlc3NFdmVudC5EYXRhRXZlbnRIABItCgNlbmQYAyABKAsyHi5wcm9jZXNzLlByb2Nlc3NFdmVudC5FbmRFdmVudEgAEjQKCWtlZXBhbGl2ZRgEIAEoCzIfLnByb2Nlc3MuUHJvY2Vzc0V2ZW50LktlZXBBbGl2ZUgAGhkKClN0YXJ0RXZlbnQSCwoDcGlkGAEgASgNGkgKCURhdGFFdmVudBIQCgZzdGRvdXQYASABKAxIABIQCgZzdGRlcnIYAiABKAxIABINCgNwdHkYAyABKAxIAEIICgZvdXRwdXQaWwoIRW5kRXZlbnQSEQoJZXhpdF9jb2RlGAEgASgREg4KBmV4aXRlZBgCIAEoCBIOCgZzdGF0dXMYAyABKAkSEgoFZXJyb3IYBCABKAlIAIgBAUIICgZfZXJyb3IaCwoJS2VlcEFsaXZlQgcKBWV2ZW50IjUKDVN0YXJ0UmVzcG9uc2USJAoFZXZlbnQYASABKAsyFS5wcm9jZXNzLlByb2Nlc3NFdmVudCI3Cg9Db25uZWN0UmVzcG9uc2USJAoFZXZlbnQYASABKAsyFS5wcm9jZXNzLlByb2Nlc3NFdmVudCJjChBTZW5kSW5wdXRSZXF1ZXN0EikKB3Byb2Nlc3MYASABKAsyGC5wcm9jZXNzLlByb2Nlc3NTZWxlY3RvchIkCgVpbnB1dBgCIAEoCzIVLnByb2Nlc3MuUHJvY2Vzc0lucHV0IhMKEVNlbmRJbnB1dFJlc3BvbnNlIjcKDFByb2Nlc3NJbnB1dBIPCgVzdGRpbhgBIAEoDEgAEg0KA3B0eRgCIAEoDEgAQgcKBWlucHV0IsICChJTdHJlYW1JbnB1dFJlcXVlc3QSNwoFc3RhcnQYASABKAsyJi5wcm9jZXNzLlN0cmVhbUlucHV0UmVxdWVzdC5TdGFydEV2ZW50SAASNQoEZGF0YRgCIAEoCzIlLnByb2Nlc3MuU3RyZWFtSW5wdXRSZXF1ZXN0LkRhdGFFdmVudEgAEjoKCWtlZXBhbGl2ZRgDIAEoCzIlLnByb2Nlc3MuU3RyZWFtSW5wdXRSZXF1ZXN0LktlZXBBbGl2ZUgAGjcKClN0YXJ0RXZlbnQSKQoHcHJvY2VzcxgBIAEoCzIYLnByb2Nlc3MuUHJvY2Vzc1NlbGVjdG9yGjEKCURhdGFFdmVudBIkCgVpbnB1dBgCIAEoCzIVLnByb2Nlc3MuUHJvY2Vzc0lucHV0GgsKCUtlZXBBbGl2ZUIHCgVldmVudCIVChNTdHJlYW1JbnB1dFJlc3BvbnNlIl8KEVNlbmRTaWduYWxSZXF1ZXN0EikKB3Byb2Nlc3MYASABKAsyGC5wcm9jZXNzLlByb2Nlc3NTZWxlY3RvchIfCgZzaWduYWwYAiABKA4yDy5wcm9jZXNzLlNpZ25hbCIUChJTZW5kU2lnbmFsUmVzcG9uc2UiOwoOQ29ubmVjdFJlcXVlc3QSKQoHcHJvY2VzcxgBIAEoCzIYLnByb2Nlc3MuUHJvY2Vzc1NlbGVjdG9yIjsKD1Byb2Nlc3NTZWxlY3RvchINCgNwaWQYASABKA1IABINCgN0YWcYAiABKAlIAEIKCghzZWxlY3RvcipICgZTaWduYWwSFgoSU0lHTkFMX1VOU1BFQ0lGSUVEEAASEgoOU0lHTkFMX1NJR1RFUk0QDxISCg5TSUdOQUxfU0lHS0lMTBAJMsoDCgdQcm9jZXNzEjMKBExpc3QSFC5wcm9jZXNzLkxpc3RSZXF1ZXN0GhUucHJvY2Vzcy5MaXN0UmVzcG9uc2USPgoHQ29ubmVjdBIXLnByb2Nlc3MuQ29ubmVjdFJlcXVlc3QaGC5wcm9jZXNzLkNvbm5lY3RSZXNwb25zZTABEjgKBVN0YXJ0EhUucHJvY2Vzcy5TdGFydFJlcXVlc3QaFi5wcm9jZXNzLlN0YXJ0UmVzcG9uc2UwARI5CgZVcGRhdGUSFi5wcm9jZXNzLlVwZGF0ZVJlcXVlc3QaFy5wcm9jZXNzLlVwZGF0ZVJlc3BvbnNlEkoKC1N0cmVhbUlucHV0EhsucHJvY2Vzcy5TdHJlYW1JbnB1dFJlcXVlc3QaHC5wcm9jZXNzLlN0cmVhbUlucHV0UmVzcG9uc2UoARJCCglTZW5kSW5wdXQSGS5wcm9jZXNzLlNlbmRJbnB1dFJlcXVlc3QaGi5wcm9jZXNzLlNlbmRJbnB1dFJlc3BvbnNlEkUKClNlbmRTaWduYWwSGi5wcm9jZXNzLlNlbmRTaWduYWxSZXF1ZXN0GhsucHJvY2Vzcy5TZW5kU2lnbmFsUmVzcG9uc2VCVwoLY29tLnByb2Nlc3NCDFByb2Nlc3NQcm90b1ABogIDUFhYqgIHUHJvY2Vzc8oCB1Byb2Nlc3PiAhNQcm9jZXNzXEdQQk1ldGFkYXRh6gIHUHJvY2Vzc2IGcHJvdG8z");
 
 /**
  * @generated from message process.PTY
  */
 export type PTY = Message<"process.PTY"> & {
-  /**
-   * @generated from field: process.PTY.Size size = 1;
-   */
-  size?: PTY_Size;
+	/**
+	 * @generated from field: process.PTY.Size size = 1;
+	 */
+	size?: PTY_Size;
 };
 
 /**
@@ -27,21 +27,21 @@ export type PTY = Message<"process.PTY"> & {
  * Use `create(PTYSchema)` to create a new message.
  */
 export const PTYSchema: GenMessage<PTY> = /*@__PURE__*/
-  messageDesc(file_process_process, 0);
+	messageDesc(file_process_process, 0);
 
 /**
  * @generated from message process.PTY.Size
  */
 export type PTY_Size = Message<"process.PTY.Size"> & {
-  /**
-   * @generated from field: uint32 cols = 1;
-   */
-  cols: number;
+	/**
+	 * @generated from field: uint32 cols = 1;
+	 */
+	cols: number;
 
-  /**
-   * @generated from field: uint32 rows = 2;
-   */
-  rows: number;
+	/**
+	 * @generated from field: uint32 rows = 2;
+	 */
+	rows: number;
 };
 
 /**
@@ -49,31 +49,31 @@ export type PTY_Size = Message<"process.PTY.Size"> & {
  * Use `create(PTY_SizeSchema)` to create a new message.
  */
 export const PTY_SizeSchema: GenMessage<PTY_Size> = /*@__PURE__*/
-  messageDesc(file_process_process, 0, 0);
+	messageDesc(file_process_process, 0, 0);
 
 /**
  * @generated from message process.ProcessConfig
  */
 export type ProcessConfig = Message<"process.ProcessConfig"> & {
-  /**
-   * @generated from field: string cmd = 1;
-   */
-  cmd: string;
+	/**
+	 * @generated from field: string cmd = 1;
+	 */
+	cmd: string;
 
-  /**
-   * @generated from field: repeated string args = 2;
-   */
-  args: string[];
+	/**
+	 * @generated from field: repeated string args = 2;
+	 */
+	args: string[];
 
-  /**
-   * @generated from field: map<string, string> envs = 3;
-   */
-  envs: { [key: string]: string };
+	/**
+	 * @generated from field: map<string, string> envs = 3;
+	 */
+	envs: { [key: string]: string };
 
-  /**
-   * @generated from field: optional string cwd = 4;
-   */
-  cwd?: string;
+	/**
+	 * @generated from field: optional string cwd = 4;
+	 */
+	cwd?: string;
 };
 
 /**
@@ -81,7 +81,7 @@ export type ProcessConfig = Message<"process.ProcessConfig"> & {
  * Use `create(ProcessConfigSchema)` to create a new message.
  */
 export const ProcessConfigSchema: GenMessage<ProcessConfig> = /*@__PURE__*/
-  messageDesc(file_process_process, 1);
+	messageDesc(file_process_process, 1);
 
 /**
  * @generated from message process.ListRequest
@@ -94,26 +94,26 @@ export type ListRequest = Message<"process.ListRequest"> & {
  * Use `create(ListRequestSchema)` to create a new message.
  */
 export const ListRequestSchema: GenMessage<ListRequest> = /*@__PURE__*/
-  messageDesc(file_process_process, 2);
+	messageDesc(file_process_process, 2);
 
 /**
  * @generated from message process.ProcessInfo
  */
 export type ProcessInfo = Message<"process.ProcessInfo"> & {
-  /**
-   * @generated from field: process.ProcessConfig config = 1;
-   */
-  config?: ProcessConfig;
+	/**
+	 * @generated from field: process.ProcessConfig config = 1;
+	 */
+	config?: ProcessConfig;
 
-  /**
-   * @generated from field: uint32 pid = 2;
-   */
-  pid: number;
+	/**
+	 * @generated from field: uint32 pid = 2;
+	 */
+	pid: number;
 
-  /**
-   * @generated from field: optional string tag = 3;
-   */
-  tag?: string;
+	/**
+	 * @generated from field: optional string tag = 3;
+	 */
+	tag?: string;
 };
 
 /**
@@ -121,16 +121,16 @@ export type ProcessInfo = Message<"process.ProcessInfo"> & {
  * Use `create(ProcessInfoSchema)` to create a new message.
  */
 export const ProcessInfoSchema: GenMessage<ProcessInfo> = /*@__PURE__*/
-  messageDesc(file_process_process, 3);
+	messageDesc(file_process_process, 3);
 
 /**
  * @generated from message process.ListResponse
  */
 export type ListResponse = Message<"process.ListResponse"> & {
-  /**
-   * @generated from field: repeated process.ProcessInfo processes = 1;
-   */
-  processes: ProcessInfo[];
+	/**
+	 * @generated from field: repeated process.ProcessInfo processes = 1;
+	 */
+	processes: ProcessInfo[];
 };
 
 /**
@@ -138,26 +138,26 @@ export type ListResponse = Message<"process.ListResponse"> & {
  * Use `create(ListResponseSchema)` to create a new message.
  */
 export const ListResponseSchema: GenMessage<ListResponse> = /*@__PURE__*/
-  messageDesc(file_process_process, 4);
+	messageDesc(file_process_process, 4);
 
 /**
  * @generated from message process.StartRequest
  */
 export type StartRequest = Message<"process.StartRequest"> & {
-  /**
-   * @generated from field: process.ProcessConfig process = 1;
-   */
-  process?: ProcessConfig;
+	/**
+	 * @generated from field: process.ProcessConfig process = 1;
+	 */
+	process?: ProcessConfig;
 
-  /**
-   * @generated from field: optional process.PTY pty = 2;
-   */
-  pty?: PTY;
+	/**
+	 * @generated from field: optional process.PTY pty = 2;
+	 */
+	pty?: PTY;
 
-  /**
-   * @generated from field: optional string tag = 3;
-   */
-  tag?: string;
+	/**
+	 * @generated from field: optional string tag = 3;
+	 */
+	tag?: string;
 };
 
 /**
@@ -165,21 +165,21 @@ export type StartRequest = Message<"process.StartRequest"> & {
  * Use `create(StartRequestSchema)` to create a new message.
  */
 export const StartRequestSchema: GenMessage<StartRequest> = /*@__PURE__*/
-  messageDesc(file_process_process, 5);
+	messageDesc(file_process_process, 5);
 
 /**
  * @generated from message process.UpdateRequest
  */
 export type UpdateRequest = Message<"process.UpdateRequest"> & {
-  /**
-   * @generated from field: process.ProcessSelector process = 1;
-   */
-  process?: ProcessSelector;
+	/**
+	 * @generated from field: process.ProcessSelector process = 1;
+	 */
+	process?: ProcessSelector;
 
-  /**
-   * @generated from field: optional process.PTY pty = 2;
-   */
-  pty?: PTY;
+	/**
+	 * @generated from field: optional process.PTY pty = 2;
+	 */
+	pty?: PTY;
 };
 
 /**
@@ -187,7 +187,7 @@ export type UpdateRequest = Message<"process.UpdateRequest"> & {
  * Use `create(UpdateRequestSchema)` to create a new message.
  */
 export const UpdateRequestSchema: GenMessage<UpdateRequest> = /*@__PURE__*/
-  messageDesc(file_process_process, 6);
+	messageDesc(file_process_process, 6);
 
 /**
  * @generated from message process.UpdateResponse
@@ -200,40 +200,40 @@ export type UpdateResponse = Message<"process.UpdateResponse"> & {
  * Use `create(UpdateResponseSchema)` to create a new message.
  */
 export const UpdateResponseSchema: GenMessage<UpdateResponse> = /*@__PURE__*/
-  messageDesc(file_process_process, 7);
+	messageDesc(file_process_process, 7);
 
 /**
  * @generated from message process.ProcessEvent
  */
 export type ProcessEvent = Message<"process.ProcessEvent"> & {
-  /**
-   * @generated from oneof process.ProcessEvent.event
-   */
-  event: {
-    /**
-     * @generated from field: process.ProcessEvent.StartEvent start = 1;
-     */
-    value: ProcessEvent_StartEvent;
-    case: "start";
-  } | {
-    /**
-     * @generated from field: process.ProcessEvent.DataEvent data = 2;
-     */
-    value: ProcessEvent_DataEvent;
-    case: "data";
-  } | {
-    /**
-     * @generated from field: process.ProcessEvent.EndEvent end = 3;
-     */
-    value: ProcessEvent_EndEvent;
-    case: "end";
-  } | {
-    /**
-     * @generated from field: process.ProcessEvent.KeepAlive keepalive = 4;
-     */
-    value: ProcessEvent_KeepAlive;
-    case: "keepalive";
-  } | { case: undefined; value?: undefined };
+	/**
+	 * @generated from oneof process.ProcessEvent.event
+	 */
+	event: {
+		/**
+		 * @generated from field: process.ProcessEvent.StartEvent start = 1;
+		 */
+		value: ProcessEvent_StartEvent;
+		case: "start";
+	} | {
+		/**
+		 * @generated from field: process.ProcessEvent.DataEvent data = 2;
+		 */
+		value: ProcessEvent_DataEvent;
+		case: "data";
+	} | {
+		/**
+		 * @generated from field: process.ProcessEvent.EndEvent end = 3;
+		 */
+		value: ProcessEvent_EndEvent;
+		case: "end";
+	} | {
+		/**
+		 * @generated from field: process.ProcessEvent.KeepAlive keepalive = 4;
+		 */
+		value: ProcessEvent_KeepAlive;
+		case: "keepalive";
+	} | { case: undefined; value?: undefined };
 };
 
 /**
@@ -241,16 +241,16 @@ export type ProcessEvent = Message<"process.ProcessEvent"> & {
  * Use `create(ProcessEventSchema)` to create a new message.
  */
 export const ProcessEventSchema: GenMessage<ProcessEvent> = /*@__PURE__*/
-  messageDesc(file_process_process, 8);
+	messageDesc(file_process_process, 8);
 
 /**
  * @generated from message process.ProcessEvent.StartEvent
  */
 export type ProcessEvent_StartEvent = Message<"process.ProcessEvent.StartEvent"> & {
-  /**
-   * @generated from field: uint32 pid = 1;
-   */
-  pid: number;
+	/**
+	 * @generated from field: uint32 pid = 1;
+	 */
+	pid: number;
 };
 
 /**
@@ -258,34 +258,34 @@ export type ProcessEvent_StartEvent = Message<"process.ProcessEvent.StartEvent">
  * Use `create(ProcessEvent_StartEventSchema)` to create a new message.
  */
 export const ProcessEvent_StartEventSchema: GenMessage<ProcessEvent_StartEvent> = /*@__PURE__*/
-  messageDesc(file_process_process, 8, 0);
+	messageDesc(file_process_process, 8, 0);
 
 /**
  * @generated from message process.ProcessEvent.DataEvent
  */
 export type ProcessEvent_DataEvent = Message<"process.ProcessEvent.DataEvent"> & {
-  /**
-   * @generated from oneof process.ProcessEvent.DataEvent.output
-   */
-  output: {
-    /**
-     * @generated from field: bytes stdout = 1;
-     */
-    value: Uint8Array;
-    case: "stdout";
-  } | {
-    /**
-     * @generated from field: bytes stderr = 2;
-     */
-    value: Uint8Array;
-    case: "stderr";
-  } | {
-    /**
-     * @generated from field: bytes pty = 3;
-     */
-    value: Uint8Array;
-    case: "pty";
-  } | { case: undefined; value?: undefined };
+	/**
+	 * @generated from oneof process.ProcessEvent.DataEvent.output
+	 */
+	output: {
+		/**
+		 * @generated from field: bytes stdout = 1;
+		 */
+		value: Uint8Array;
+		case: "stdout";
+	} | {
+		/**
+		 * @generated from field: bytes stderr = 2;
+		 */
+		value: Uint8Array;
+		case: "stderr";
+	} | {
+		/**
+		 * @generated from field: bytes pty = 3;
+		 */
+		value: Uint8Array;
+		case: "pty";
+	} | { case: undefined; value?: undefined };
 };
 
 /**
@@ -293,31 +293,31 @@ export type ProcessEvent_DataEvent = Message<"process.ProcessEvent.DataEvent"> &
  * Use `create(ProcessEvent_DataEventSchema)` to create a new message.
  */
 export const ProcessEvent_DataEventSchema: GenMessage<ProcessEvent_DataEvent> = /*@__PURE__*/
-  messageDesc(file_process_process, 8, 1);
+	messageDesc(file_process_process, 8, 1);
 
 /**
  * @generated from message process.ProcessEvent.EndEvent
  */
 export type ProcessEvent_EndEvent = Message<"process.ProcessEvent.EndEvent"> & {
-  /**
-   * @generated from field: sint32 exit_code = 1;
-   */
-  exitCode: number;
+	/**
+	 * @generated from field: sint32 exit_code = 1;
+	 */
+	exitCode: number;
 
-  /**
-   * @generated from field: bool exited = 2;
-   */
-  exited: boolean;
+	/**
+	 * @generated from field: bool exited = 2;
+	 */
+	exited: boolean;
 
-  /**
-   * @generated from field: string status = 3;
-   */
-  status: string;
+	/**
+	 * @generated from field: string status = 3;
+	 */
+	status: string;
 
-  /**
-   * @generated from field: optional string error = 4;
-   */
-  error?: string;
+	/**
+	 * @generated from field: optional string error = 4;
+	 */
+	error?: string;
 };
 
 /**
@@ -325,7 +325,7 @@ export type ProcessEvent_EndEvent = Message<"process.ProcessEvent.EndEvent"> & {
  * Use `create(ProcessEvent_EndEventSchema)` to create a new message.
  */
 export const ProcessEvent_EndEventSchema: GenMessage<ProcessEvent_EndEvent> = /*@__PURE__*/
-  messageDesc(file_process_process, 8, 2);
+	messageDesc(file_process_process, 8, 2);
 
 /**
  * @generated from message process.ProcessEvent.KeepAlive
@@ -338,16 +338,16 @@ export type ProcessEvent_KeepAlive = Message<"process.ProcessEvent.KeepAlive"> &
  * Use `create(ProcessEvent_KeepAliveSchema)` to create a new message.
  */
 export const ProcessEvent_KeepAliveSchema: GenMessage<ProcessEvent_KeepAlive> = /*@__PURE__*/
-  messageDesc(file_process_process, 8, 3);
+	messageDesc(file_process_process, 8, 3);
 
 /**
  * @generated from message process.StartResponse
  */
 export type StartResponse = Message<"process.StartResponse"> & {
-  /**
-   * @generated from field: process.ProcessEvent event = 1;
-   */
-  event?: ProcessEvent;
+	/**
+	 * @generated from field: process.ProcessEvent event = 1;
+	 */
+	event?: ProcessEvent;
 };
 
 /**
@@ -355,16 +355,16 @@ export type StartResponse = Message<"process.StartResponse"> & {
  * Use `create(StartResponseSchema)` to create a new message.
  */
 export const StartResponseSchema: GenMessage<StartResponse> = /*@__PURE__*/
-  messageDesc(file_process_process, 9);
+	messageDesc(file_process_process, 9);
 
 /**
  * @generated from message process.ConnectResponse
  */
 export type ConnectResponse = Message<"process.ConnectResponse"> & {
-  /**
-   * @generated from field: process.ProcessEvent event = 1;
-   */
-  event?: ProcessEvent;
+	/**
+	 * @generated from field: process.ProcessEvent event = 1;
+	 */
+	event?: ProcessEvent;
 };
 
 /**
@@ -372,21 +372,21 @@ export type ConnectResponse = Message<"process.ConnectResponse"> & {
  * Use `create(ConnectResponseSchema)` to create a new message.
  */
 export const ConnectResponseSchema: GenMessage<ConnectResponse> = /*@__PURE__*/
-  messageDesc(file_process_process, 10);
+	messageDesc(file_process_process, 10);
 
 /**
  * @generated from message process.SendInputRequest
  */
 export type SendInputRequest = Message<"process.SendInputRequest"> & {
-  /**
-   * @generated from field: process.ProcessSelector process = 1;
-   */
-  process?: ProcessSelector;
+	/**
+	 * @generated from field: process.ProcessSelector process = 1;
+	 */
+	process?: ProcessSelector;
 
-  /**
-   * @generated from field: process.ProcessInput input = 2;
-   */
-  input?: ProcessInput;
+	/**
+	 * @generated from field: process.ProcessInput input = 2;
+	 */
+	input?: ProcessInput;
 };
 
 /**
@@ -394,7 +394,7 @@ export type SendInputRequest = Message<"process.SendInputRequest"> & {
  * Use `create(SendInputRequestSchema)` to create a new message.
  */
 export const SendInputRequestSchema: GenMessage<SendInputRequest> = /*@__PURE__*/
-  messageDesc(file_process_process, 11);
+	messageDesc(file_process_process, 11);
 
 /**
  * @generated from message process.SendInputResponse
@@ -407,28 +407,28 @@ export type SendInputResponse = Message<"process.SendInputResponse"> & {
  * Use `create(SendInputResponseSchema)` to create a new message.
  */
 export const SendInputResponseSchema: GenMessage<SendInputResponse> = /*@__PURE__*/
-  messageDesc(file_process_process, 12);
+	messageDesc(file_process_process, 12);
 
 /**
  * @generated from message process.ProcessInput
  */
 export type ProcessInput = Message<"process.ProcessInput"> & {
-  /**
-   * @generated from oneof process.ProcessInput.input
-   */
-  input: {
-    /**
-     * @generated from field: bytes stdin = 1;
-     */
-    value: Uint8Array;
-    case: "stdin";
-  } | {
-    /**
-     * @generated from field: bytes pty = 2;
-     */
-    value: Uint8Array;
-    case: "pty";
-  } | { case: undefined; value?: undefined };
+	/**
+	 * @generated from oneof process.ProcessInput.input
+	 */
+	input: {
+		/**
+		 * @generated from field: bytes stdin = 1;
+		 */
+		value: Uint8Array;
+		case: "stdin";
+	} | {
+		/**
+		 * @generated from field: bytes pty = 2;
+		 */
+		value: Uint8Array;
+		case: "pty";
+	} | { case: undefined; value?: undefined };
 };
 
 /**
@@ -436,34 +436,34 @@ export type ProcessInput = Message<"process.ProcessInput"> & {
  * Use `create(ProcessInputSchema)` to create a new message.
  */
 export const ProcessInputSchema: GenMessage<ProcessInput> = /*@__PURE__*/
-  messageDesc(file_process_process, 13);
+	messageDesc(file_process_process, 13);
 
 /**
  * @generated from message process.StreamInputRequest
  */
 export type StreamInputRequest = Message<"process.StreamInputRequest"> & {
-  /**
-   * @generated from oneof process.StreamInputRequest.event
-   */
-  event: {
-    /**
-     * @generated from field: process.StreamInputRequest.StartEvent start = 1;
-     */
-    value: StreamInputRequest_StartEvent;
-    case: "start";
-  } | {
-    /**
-     * @generated from field: process.StreamInputRequest.DataEvent data = 2;
-     */
-    value: StreamInputRequest_DataEvent;
-    case: "data";
-  } | {
-    /**
-     * @generated from field: process.StreamInputRequest.KeepAlive keepalive = 3;
-     */
-    value: StreamInputRequest_KeepAlive;
-    case: "keepalive";
-  } | { case: undefined; value?: undefined };
+	/**
+	 * @generated from oneof process.StreamInputRequest.event
+	 */
+	event: {
+		/**
+		 * @generated from field: process.StreamInputRequest.StartEvent start = 1;
+		 */
+		value: StreamInputRequest_StartEvent;
+		case: "start";
+	} | {
+		/**
+		 * @generated from field: process.StreamInputRequest.DataEvent data = 2;
+		 */
+		value: StreamInputRequest_DataEvent;
+		case: "data";
+	} | {
+		/**
+		 * @generated from field: process.StreamInputRequest.KeepAlive keepalive = 3;
+		 */
+		value: StreamInputRequest_KeepAlive;
+		case: "keepalive";
+	} | { case: undefined; value?: undefined };
 };
 
 /**
@@ -471,16 +471,16 @@ export type StreamInputRequest = Message<"process.StreamInputRequest"> & {
  * Use `create(StreamInputRequestSchema)` to create a new message.
  */
 export const StreamInputRequestSchema: GenMessage<StreamInputRequest> = /*@__PURE__*/
-  messageDesc(file_process_process, 14);
+	messageDesc(file_process_process, 14);
 
 /**
  * @generated from message process.StreamInputRequest.StartEvent
  */
 export type StreamInputRequest_StartEvent = Message<"process.StreamInputRequest.StartEvent"> & {
-  /**
-   * @generated from field: process.ProcessSelector process = 1;
-   */
-  process?: ProcessSelector;
+	/**
+	 * @generated from field: process.ProcessSelector process = 1;
+	 */
+	process?: ProcessSelector;
 };
 
 /**
@@ -488,16 +488,16 @@ export type StreamInputRequest_StartEvent = Message<"process.StreamInputRequest.
  * Use `create(StreamInputRequest_StartEventSchema)` to create a new message.
  */
 export const StreamInputRequest_StartEventSchema: GenMessage<StreamInputRequest_StartEvent> = /*@__PURE__*/
-  messageDesc(file_process_process, 14, 0);
+	messageDesc(file_process_process, 14, 0);
 
 /**
  * @generated from message process.StreamInputRequest.DataEvent
  */
 export type StreamInputRequest_DataEvent = Message<"process.StreamInputRequest.DataEvent"> & {
-  /**
-   * @generated from field: process.ProcessInput input = 2;
-   */
-  input?: ProcessInput;
+	/**
+	 * @generated from field: process.ProcessInput input = 2;
+	 */
+	input?: ProcessInput;
 };
 
 /**
@@ -505,7 +505,7 @@ export type StreamInputRequest_DataEvent = Message<"process.StreamInputRequest.D
  * Use `create(StreamInputRequest_DataEventSchema)` to create a new message.
  */
 export const StreamInputRequest_DataEventSchema: GenMessage<StreamInputRequest_DataEvent> = /*@__PURE__*/
-  messageDesc(file_process_process, 14, 1);
+	messageDesc(file_process_process, 14, 1);
 
 /**
  * @generated from message process.StreamInputRequest.KeepAlive
@@ -518,7 +518,7 @@ export type StreamInputRequest_KeepAlive = Message<"process.StreamInputRequest.K
  * Use `create(StreamInputRequest_KeepAliveSchema)` to create a new message.
  */
 export const StreamInputRequest_KeepAliveSchema: GenMessage<StreamInputRequest_KeepAlive> = /*@__PURE__*/
-  messageDesc(file_process_process, 14, 2);
+	messageDesc(file_process_process, 14, 2);
 
 /**
  * @generated from message process.StreamInputResponse
@@ -531,21 +531,21 @@ export type StreamInputResponse = Message<"process.StreamInputResponse"> & {
  * Use `create(StreamInputResponseSchema)` to create a new message.
  */
 export const StreamInputResponseSchema: GenMessage<StreamInputResponse> = /*@__PURE__*/
-  messageDesc(file_process_process, 15);
+	messageDesc(file_process_process, 15);
 
 /**
  * @generated from message process.SendSignalRequest
  */
 export type SendSignalRequest = Message<"process.SendSignalRequest"> & {
-  /**
-   * @generated from field: process.ProcessSelector process = 1;
-   */
-  process?: ProcessSelector;
+	/**
+	 * @generated from field: process.ProcessSelector process = 1;
+	 */
+	process?: ProcessSelector;
 
-  /**
-   * @generated from field: process.Signal signal = 2;
-   */
-  signal: Signal;
+	/**
+	 * @generated from field: process.Signal signal = 2;
+	 */
+	signal: Signal;
 };
 
 /**
@@ -553,7 +553,7 @@ export type SendSignalRequest = Message<"process.SendSignalRequest"> & {
  * Use `create(SendSignalRequestSchema)` to create a new message.
  */
 export const SendSignalRequestSchema: GenMessage<SendSignalRequest> = /*@__PURE__*/
-  messageDesc(file_process_process, 16);
+	messageDesc(file_process_process, 16);
 
 /**
  * @generated from message process.SendSignalResponse
@@ -566,16 +566,16 @@ export type SendSignalResponse = Message<"process.SendSignalResponse"> & {
  * Use `create(SendSignalResponseSchema)` to create a new message.
  */
 export const SendSignalResponseSchema: GenMessage<SendSignalResponse> = /*@__PURE__*/
-  messageDesc(file_process_process, 17);
+	messageDesc(file_process_process, 17);
 
 /**
  * @generated from message process.ConnectRequest
  */
 export type ConnectRequest = Message<"process.ConnectRequest"> & {
-  /**
-   * @generated from field: process.ProcessSelector process = 1;
-   */
-  process?: ProcessSelector;
+	/**
+	 * @generated from field: process.ProcessSelector process = 1;
+	 */
+	process?: ProcessSelector;
 };
 
 /**
@@ -583,28 +583,28 @@ export type ConnectRequest = Message<"process.ConnectRequest"> & {
  * Use `create(ConnectRequestSchema)` to create a new message.
  */
 export const ConnectRequestSchema: GenMessage<ConnectRequest> = /*@__PURE__*/
-  messageDesc(file_process_process, 18);
+	messageDesc(file_process_process, 18);
 
 /**
  * @generated from message process.ProcessSelector
  */
 export type ProcessSelector = Message<"process.ProcessSelector"> & {
-  /**
-   * @generated from oneof process.ProcessSelector.selector
-   */
-  selector: {
-    /**
-     * @generated from field: uint32 pid = 1;
-     */
-    value: number;
-    case: "pid";
-  } | {
-    /**
-     * @generated from field: string tag = 2;
-     */
-    value: string;
-    case: "tag";
-  } | { case: undefined; value?: undefined };
+	/**
+	 * @generated from oneof process.ProcessSelector.selector
+	 */
+	selector: {
+		/**
+		 * @generated from field: uint32 pid = 1;
+		 */
+		value: number;
+		case: "pid";
+	} | {
+		/**
+		 * @generated from field: string tag = 2;
+		 */
+		value: string;
+		case: "tag";
+	} | { case: undefined; value?: undefined };
 };
 
 /**
@@ -612,95 +612,95 @@ export type ProcessSelector = Message<"process.ProcessSelector"> & {
  * Use `create(ProcessSelectorSchema)` to create a new message.
  */
 export const ProcessSelectorSchema: GenMessage<ProcessSelector> = /*@__PURE__*/
-  messageDesc(file_process_process, 19);
+	messageDesc(file_process_process, 19);
 
 /**
  * @generated from enum process.Signal
  */
 export enum Signal {
-  /**
-   * @generated from enum value: SIGNAL_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
+	/**
+	 * @generated from enum value: SIGNAL_UNSPECIFIED = 0;
+	 */
+	UNSPECIFIED = 0,
 
-  /**
-   * @generated from enum value: SIGNAL_SIGTERM = 15;
-   */
-  SIGTERM = 15,
+	/**
+	 * @generated from enum value: SIGNAL_SIGTERM = 15;
+	 */
+	SIGTERM = 15,
 
-  /**
-   * @generated from enum value: SIGNAL_SIGKILL = 9;
-   */
-  SIGKILL = 9,
+	/**
+	 * @generated from enum value: SIGNAL_SIGKILL = 9;
+	 */
+	SIGKILL = 9,
 }
 
 /**
  * Describes the enum process.Signal.
  */
 export const SignalSchema: GenEnum<Signal> = /*@__PURE__*/
-  enumDesc(file_process_process, 0);
+	enumDesc(file_process_process, 0);
 
 /**
  * @generated from service process.Process
  */
 export const Process: GenService<{
-  /**
-   * @generated from rpc process.Process.List
-   */
-  list: {
-    methodKind: "unary";
-    input: typeof ListRequestSchema;
-    output: typeof ListResponseSchema;
-  },
-  /**
-   * @generated from rpc process.Process.Connect
-   */
-  connect: {
-    methodKind: "server_streaming";
-    input: typeof ConnectRequestSchema;
-    output: typeof ConnectResponseSchema;
-  },
-  /**
-   * @generated from rpc process.Process.Start
-   */
-  start: {
-    methodKind: "server_streaming";
-    input: typeof StartRequestSchema;
-    output: typeof StartResponseSchema;
-  },
-  /**
-   * @generated from rpc process.Process.Update
-   */
-  update: {
-    methodKind: "unary";
-    input: typeof UpdateRequestSchema;
-    output: typeof UpdateResponseSchema;
-  },
-  /**
-   * Client input stream ensures ordering of messages
-   *
-   * @generated from rpc process.Process.StreamInput
-   */
-  streamInput: {
-    methodKind: "client_streaming";
-    input: typeof StreamInputRequestSchema;
-    output: typeof StreamInputResponseSchema;
-  },
-  /**
-   * @generated from rpc process.Process.SendInput
-   */
-  sendInput: {
-    methodKind: "unary";
-    input: typeof SendInputRequestSchema;
-    output: typeof SendInputResponseSchema;
-  },
-  /**
-   * @generated from rpc process.Process.SendSignal
-   */
-  sendSignal: {
-    methodKind: "unary";
-    input: typeof SendSignalRequestSchema;
-    output: typeof SendSignalResponseSchema;
-  },
+	/**
+	 * @generated from rpc process.Process.List
+	 */
+	list: {
+		methodKind: "unary";
+		input: typeof ListRequestSchema;
+		output: typeof ListResponseSchema;
+	},
+	/**
+	 * @generated from rpc process.Process.Connect
+	 */
+	connect: {
+		methodKind: "server_streaming";
+		input: typeof ConnectRequestSchema;
+		output: typeof ConnectResponseSchema;
+	},
+	/**
+	 * @generated from rpc process.Process.Start
+	 */
+	start: {
+		methodKind: "server_streaming";
+		input: typeof StartRequestSchema;
+		output: typeof StartResponseSchema;
+	},
+	/**
+	 * @generated from rpc process.Process.Update
+	 */
+	update: {
+		methodKind: "unary";
+		input: typeof UpdateRequestSchema;
+		output: typeof UpdateResponseSchema;
+	},
+	/**
+	 * Client input stream ensures ordering of messages
+	 *
+	 * @generated from rpc process.Process.StreamInput
+	 */
+	streamInput: {
+		methodKind: "client_streaming";
+		input: typeof StreamInputRequestSchema;
+		output: typeof StreamInputResponseSchema;
+	},
+	/**
+	 * @generated from rpc process.Process.SendInput
+	 */
+	sendInput: {
+		methodKind: "unary";
+		input: typeof SendInputRequestSchema;
+		output: typeof SendInputResponseSchema;
+	},
+	/**
+	 * @generated from rpc process.Process.SendSignal
+	 */
+	sendSignal: {
+		methodKind: "unary";
+		input: typeof SendSignalRequestSchema;
+		output: typeof SendSignalResponseSchema;
+	},
 }> = /*@__PURE__*/
-  serviceDesc(file_process_process, 0);
+	serviceDesc(file_process_process, 0);

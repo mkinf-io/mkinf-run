@@ -1,7 +1,7 @@
+import { Server } from '@modelcontextprotocol/sdk/server/index';
 import Stripe from "stripe";
 import KeyType from "../models/enums/KeyType";
 import { DatabaseClient } from "./databaseExtensions.types";
-import { Server } from '@modelcontextprotocol/sdk/server/index';
 
 declare global {
 	namespace Express {
