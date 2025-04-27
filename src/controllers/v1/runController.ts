@@ -23,6 +23,11 @@ export const listToolsOnce = async (req: Request, res: Response) => {
 		if (!latestRelease.template_id) { return res.status(500).json({ status: 500, message: "Missing template ID" }); }
 		// Create a new SandboxClientTransport instance
 		const transport = new SandboxClientTransport({
+			key_id: req.keyId,
+			owner: req.params.owner,
+			repository: req.params.repo,
+			build_number: latestRelease.build_number,
+			version: latestRelease.version,
 			command: `stty -echo && ${latestRelease.bootstrap_command}\n`,
 			template_id: latestRelease.template_id,
 			timeout: +(req.query.timeout ?? 20),
@@ -35,7 +40,7 @@ export const listToolsOnce = async (req: Request, res: Response) => {
 		// Connect to the sandbox without MCP initialization
 		await client.connectWithoutInit(transport);
 		// List available tools
-		const result = await client.listTools();
+		const result = await client.listTools(undefined, { timeout: +(req.query.timeout ?? 20) * 1000 });
 		// Close the client connection
 		await client.close();
 		// End timer
@@ -62,7 +67,7 @@ export const listToolsOnce = async (req: Request, res: Response) => {
 		return res.status(200).json({ status: 200, data: result, duration });
 	} catch (error) {
 		console.log("Error", error);
-		res.status(500).json({ status: 500, message: "Server error" });
+		return res.status(500).json({ status: 500, message: "Server error" });
 	}
 }
 
@@ -89,9 +94,14 @@ export const runActionOnce = async (req: Request, res: Response) => {
 		const inputTokens = countTokens(JSON.stringify(req.body.args));
 		// Create a new SandboxClientTransport instance
 		const transport = new SandboxClientTransport({
+			key_id: req.keyId,
+			owner: req.params.owner,
+			repository: req.params.repo,
+			build_number: latestRelease.build_number,
+			version: latestRelease.version,
 			command: `stty -echo && ${latestRelease.bootstrap_command}\n`,
 			template_id: latestRelease.template_id,
-			timeout: req.body.timeout ?? 60,
+			timeout: +(req.body.timeout ?? 60),
 			env: req.body.env
 		});
 		// Create a new MCPClient instance
@@ -101,7 +111,7 @@ export const runActionOnce = async (req: Request, res: Response) => {
 		// Connect to the sandbox with initialization
 		await client.connectWithoutInit(transport);
 		// Call the tool
-		const result = await client.callTool({ name: action.action, arguments: req.body.args });
+		const result = await client.callTool({ name: action.action, arguments: req.body.args }, undefined, { timeout: +(req.body.timeout ?? 60) * 1000 });
 		// Close the client connection
 		await client.close();
 		// End timer
@@ -128,6 +138,6 @@ export const runActionOnce = async (req: Request, res: Response) => {
 		return res.status(200).json({ status: 200, data: result, duration });
 	} catch (error) {
 		console.log("Error", error);
-		res.status(500).json({ status: 500, message: "Server error" });
+		return res.status(500).json({ status: 500, message: "Server error" });
 	}
 }

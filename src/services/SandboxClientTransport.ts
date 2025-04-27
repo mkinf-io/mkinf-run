@@ -6,8 +6,14 @@ import { Stream } from "stream";
 import { CommandsExt } from "../utils/CommandsExt";
 import { ReadBuffer, serializeMessage } from "../utils/ReadBuffer";
 import stripAnsi from "../utils/stripAnsi";
+import logging from "../middleware/logging";
 
 export type SandboxServerParameters = {
+	key_id: string;
+	owner: string;
+	repository: string;
+	build_number: number;
+	version?: string;
 	command: string;
 	template_id: string;
 	timeout: number;
@@ -83,6 +89,7 @@ export class SandboxClientTransport implements Transport {
 						envs: this._serverParams.env ?? undefined
 					}
 				);
+				console.log("SANDBOX ID:", this._sandbox.sandboxId);
 
 				this._commandHandle = await this._sandbox?.pty.create({
 					cols: 80,
@@ -94,14 +101,54 @@ export class SandboxClientTransport implements Transport {
 					onData: async (chunk: Uint8Array) => {
 						const textChunk = stripAnsi(new TextDecoder().decode(chunk));
 						console.log("OUT:\n", JSON.stringify(textChunk).yellow.bold);
+						logging.requestRunLogger.info("Stdout message", {
+							key_id: this._serverParams.key_id,
+							owner: this._serverParams.owner,
+							repository: this._serverParams.repository,
+							build_number: this._serverParams.build_number,
+							version: this._serverParams.version,
+							command: this._serverParams.command,
+							pid: this._commandHandle?.pid,
+							sandboxId: this._sandbox?.sandboxId,
+							timeout: this._serverParams.timeout,
+							action: "stdout",
+							data: textChunk,
+							isError: false,
+						});
 						if (this._needsInitialization) {
 							if (textChunk == "~ $ ") {
-								console.log("Send command");
+								console.log("Initializing server");
+								logging.requestRunLogger.info("Initializing server", {
+									key_id: this._serverParams.key_id,
+									owner: this._serverParams.owner,
+									repository: this._serverParams.repository,
+									build_number: this._serverParams.build_number,
+									version: this._serverParams.version,
+									command: this._serverParams.command,
+									pid: this._commandHandle?.pid,
+									sandboxId: this._sandbox?.sandboxId,
+									timeout: this._serverParams.timeout,
+									action: "initialize_server",
+									isError: false,
+								});
 								this._sandbox?.pty.sendInput(this._commandHandle?.pid!, new TextEncoder().encode(this._serverParams.command));
 								return;
 							}
 							if (textChunk.includes(this._serverParams.command.trim())) {
-								console.log("MCP Ready");
+								console.log("Server Ready");
+								logging.requestRunLogger.info("Server Ready", {
+									key_id: this._serverParams.key_id,
+									owner: this._serverParams.owner,
+									repository: this._serverParams.repository,
+									build_number: this._serverParams.build_number,
+									version: this._serverParams.version,
+									command: this._serverParams.command,
+									pid: this._commandHandle?.pid,
+									sandboxId: this._sandbox?.sandboxId,
+									timeout: this._serverParams.timeout,
+									action: "server_ready",
+									isError: false,
+								});
 								this._needsInitialization = false;
 								resolve();
 								return;
@@ -109,6 +156,7 @@ export class SandboxClientTransport implements Transport {
 						}
 						this._readBuffer.append(Buffer.from(chunk));
 						this.processReadBuffer();
+						console.log("ADDED CHUNK TO BUFFER");
 					},
 				});
 			}
@@ -118,6 +166,20 @@ export class SandboxClientTransport implements Transport {
 					if (this._commandHandle?.stderr != undefined && this._commandHandle?.stderr.length > 0) {
 						console.log("EXIT THEN ERR");
 						console.log("ERR:\n", this._commandHandle?.stderr.red);
+						logging.requestRunLogger.error("Sandbox exited with error", {
+							key_id: this._serverParams.key_id,
+							owner: this._serverParams.owner,
+							repository: this._serverParams.repository,
+							build_number: this._serverParams.build_number,
+							version: this._serverParams.version,
+							command: this._serverParams.command,
+							pid: this._commandHandle?.pid,
+							sandboxId: this._sandbox?.sandboxId,
+							timeout: this._serverParams.timeout,
+							action: "sandbox_exited_with_error",
+							isError: true,
+							error: this._commandHandle?.stderr,
+						});
 						this.onerror?.(Error(this._commandHandle?.stderr))
 					}
 				}).catch((error) => {
@@ -125,6 +187,20 @@ export class SandboxClientTransport implements Transport {
 					console.log("ERR EXIT");
 					console.log("ERR:\n", error);
 					console.log("STDERR:\n", this._commandHandle?.stderr?.red);
+					logging.requestRunLogger.error("Sandbox exited with error", {
+						key_id: this._serverParams.key_id,
+						owner: this._serverParams.owner,
+						repository: this._serverParams.repository,
+						build_number: this._serverParams.build_number,
+						version: this._serverParams.version,
+						command: this._serverParams.command,
+						pid: this._commandHandle?.pid,
+						sandboxId: this._sandbox?.sandboxId,
+						timeout: this._serverParams.timeout,
+						action: "sandbox_exited_with_error",
+						isError: true,
+						error: error,
+					});
 					this.onerror?.(error);
 				})
 		});
@@ -158,7 +234,21 @@ export class SandboxClientTransport implements Transport {
 					// console.log("PROCESS:\n", "No message received");
 					break;
 				}
-				// console.log("ON MESSAGE:\n", JSON.stringify(message).green);
+				console.log("ON MESSAGE:\n", JSON.stringify(message).green);
+				logging.requestRunLogger.info("Send output message", {
+					key_id: this._serverParams.key_id,
+					owner: this._serverParams.owner,
+					repository: this._serverParams.repository,
+					build_number: this._serverParams.build_number,
+					version: this._serverParams.version,
+					command: this._serverParams.command,
+					pid: this._commandHandle?.pid,
+					sandboxId: this._sandbox?.sandboxId,
+					timeout: this._serverParams.timeout,
+					action: "send_output",
+					data: message,
+					isError: false,
+				});
 				this.onmessage?.(message);
 			} catch (error) {
 				this.onerror?.(error as Error);
@@ -168,20 +258,61 @@ export class SandboxClientTransport implements Transport {
 
 	async detach(): Promise<void> {
 		console.log("Detaching SandboxClientTransport");
+		logging.requestRunLogger.info("Detach sandbox request", {
+			key_id: this._serverParams.key_id,
+			owner: this._serverParams.owner,
+			repository: this._serverParams.repository,
+			build_number: this._serverParams.build_number,
+			version: this._serverParams.version,
+			command: this._serverParams.command,
+			pid: this._commandHandle?.pid,
+			sandboxId: this._sandbox?.sandboxId,
+			timeout: this._serverParams.timeout,
+			isError: false,
+			action: "detach_sandbox",
+		});
 		this._commandHandle?.disconnect();
 		this._sandbox = undefined;
 		this._commandHandle = undefined;
 		this._readBuffer.clear();
+		logging.flushRunLogs();
 	}
 
 	async close(): Promise<void> {
 		console.log("Closing SandboxClientTransport");
+		logging.requestRunLogger.info("Close sandbox request", {
+			key_id: this._serverParams.key_id,
+			owner: this._serverParams.owner,
+			repository: this._serverParams.repository,
+			build_number: this._serverParams.build_number,
+			version: this._serverParams.version,
+			command: this._serverParams.command,
+			pid: this._commandHandle?.pid,
+			sandboxId: this._sandbox?.sandboxId,
+			timeout: this._serverParams.timeout,
+			isError: false,
+			action: "close_sandbox",
+		});
 		this._abortController.abort();
 		await this._commandHandle?.kill();
 		await this._sandbox?.kill();
+		logging.requestRunLogger.info("Sandbox closed", {
+			key_id: this._serverParams.key_id,
+			owner: this._serverParams.owner,
+			repository: this._serverParams.repository,
+			build_number: this._serverParams.build_number,
+			version: this._serverParams.version,
+			command: this._serverParams.command,
+			pid: this._commandHandle?.pid,
+			sandboxId: this._sandbox?.sandboxId,
+			timeout: this._serverParams.timeout,
+			isError: false,
+			action: "sandbox_closed",
+		});
 		this._sandbox = undefined;
 		this._commandHandle = undefined;
 		this._readBuffer.clear();
+		logging.flushRunLogs();
 	}
 
 	send(message: JSONRPCMessage): Promise<void> {
@@ -191,6 +322,20 @@ export class SandboxClientTransport implements Transport {
 			}
 			const json = serializeMessage(message);
 			console.log("IN:\n", JSON.stringify(json).blue.bold);
+			logging.requestRunLogger.info("Sending input message", {
+				key_id: this._serverParams.key_id,
+				owner: this._serverParams.owner,
+				repository: this._serverParams.repository,
+				build_number: this._serverParams.build_number,
+				version: this._serverParams.version,
+				command: this._serverParams.command,
+				pid: this._commandHandle?.pid,
+				sandboxId: this._sandbox?.sandboxId,
+				timeout: this._serverParams.timeout,
+				isError: false,
+				action: "send_input",
+				data: message,
+			});
 			const encodedJson = new TextEncoder().encode(json);
 			try {
 				await this._sandbox?.pty.sendInput(this._commandHandle?.pid, encodedJson);
