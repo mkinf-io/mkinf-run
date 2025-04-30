@@ -4,6 +4,7 @@ import express from 'express';
 import expressWinston from 'express-winston';
 import winston from 'winston';
 
+// API logs
 const logtail = new Logtail(process.env.BETTERSTACK_SOURCE_TOKEN || '', {
 	endpoint: "https://s1211998.eu-nbg-2.betterstackdata.com",
 });
@@ -71,8 +72,25 @@ const flush = () => {
 	logtail.flush();
 }
 
+// Run logs
+const runLogtail = new Logtail(process.env.BETTERSTACK_RUN_LOGS_TOKEN || '', {
+	endpoint: "https://s1241271.eu-nbg-2.betterstackdata.com",
+});
+
+const requestRunLogger = winston.createLogger({
+	transports: [
+		new LogtailTransport(runLogtail)
+	]
+});
+
+const flushRunLogs = () => {
+	runLogtail.flush();
+}
+
 export default {
 	requestLogger,
 	errorLogger,
-	flush
+	flush,
+	requestRunLogger,
+	flushRunLogs
 };
